@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from polls.models import DolarBlue
+from dolar_blue.models import DolarBlue
 from django.utils import timezone
 from decimal import Decimal
 
