@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h1>Dolar blue</h1>
+<p class="lead">Ultima actuallizacion:</p>
+<p class="date">{{ last_price.date }}</p>
+<br>
+<p class="value_prefix">Valor de compra: </p>
+<p class="buy value">{{ last_price.value_buy }}</p>
+<p class="value_prefix">Valor de venta: </p>
+<p class="sell value">{{ last_price.value_sell }}</p>
+{% endblock %}
