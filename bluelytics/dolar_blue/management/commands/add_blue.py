@@ -1,7 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
 from dolar_blue.models import DolarBlue
 from django.utils import timezone
+
 from decimal import Decimal
+import datetime
 
 class Command(BaseCommand):
     args = 'valor_compra valor_venta'
@@ -12,7 +14,8 @@ class Command(BaseCommand):
             raise CommandError('Incorrect arguments')
 
         try:
-            db = DolarBlue(date=timezone.now(), value_buy = Decimal(args[0]), value_sell=Decimal(args[1]))
+            now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
+            db = DolarBlue(date=now, value_buy = Decimal(args[0]), value_sell=Decimal(args[1]))
             db.save()
             self.stdout.write('Successfully saved new dollar values')
         except Exception:

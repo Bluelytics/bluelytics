@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-
+{% load tz %}
 
 {% block content %}
 <h1>Dolar blue</h1>
-<p class="lead">Ultima actuallizacion:</p>
-<p class="date">{{ last_price.date }}</p>
+<p class="lead">Ultima actualización:</p>
+<p class="date">{% localtime on %}{{ last_price.date }}{% endlocaltime %}</p>
 <br>
 <p class="value_prefix">Valor de compra: </p>
 <p class="buy value">{{ last_price.value_buy }}</p>

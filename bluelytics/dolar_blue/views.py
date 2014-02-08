@@ -1,10 +1,21 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.utils import timezone
+from django.core import serializers
+import pytz
 
 from dolar_blue.models import DolarBlue
 
-def index(request):
-    #last_prices = DolarBlue.objects.order_by('-date')[:30]
-    last_price = DolarBlue.objects.order_by('-date').last()
-    context = { 'last_price': last_price }
+def lastPrice():
+  return DolarBlue.objects.order_by('-date').last()
 
-    return render(request, 'index.html', context)
+def index(request):
+  timezone.activate(pytz.timezone("America/Argentina/Buenos_Aires"))
+  last_price = lastPrice()
+  context = { 'last_price': last_price }
+
+  return render(request, 'index.html', context)
+
+def json_lastprice(request):
+  last_price = lastPrice().json()
+  return HttpResponse(last_price, mimetype="application/json")
