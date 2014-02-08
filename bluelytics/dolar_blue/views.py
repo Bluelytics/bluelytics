@@ -7,7 +7,7 @@ import pytz
 from dolar_blue.models import DolarBlue
 
 def lastPrice():
-  return DolarBlue.objects.first()
+  return DolarBlue.objects.last()
 
 def index(request):
   timezone.activate(pytz.timezone("America/Argentina/Buenos_Aires"))
