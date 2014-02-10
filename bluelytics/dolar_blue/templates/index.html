@@ -1,13 +1,22 @@
 {% extends "base.html" %}
-
+{% load tz %}
 
 {% block content %}
 <h1>Dolar blue</h1>
-<p class="lead">Ultima actuallizacion:</p>
-<p class="date">{{ last_price.date }}</p>
+<p class="lead">Ultima actualización:</p>
+<p class="date">{% localtime on %}{{ last_price.date }}{% endlocaltime %}</p>
 <br>
-<p class="value_prefix">Valor de compra: </p>
-<p class="buy value">{{ last_price.value_buy }}</p>
-<p class="value_prefix">Valor de venta: </p>
-<p class="sell value">{{ last_price.value_sell }}</p>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <dl id="last_prices" class="dl-horizontal">
+      <dt>Compra: </dt>
+      <dd>{{ last_price.value_buy }}</dd>
+      <dt>Venta: </dt>
+      <dd>{{ last_price.value_sell }}</dd>
+      <dt>Intermedio: </dt>
+      <dd>{{ last_price.value_avg }}</dd>
+    </dl>
+    </div>
+</div>
+
 {% endblock %}

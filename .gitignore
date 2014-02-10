@@ -4,3 +4,5 @@ lib/
 local/
 *.pyc
 casperjs/
+static/
+local_settings.py

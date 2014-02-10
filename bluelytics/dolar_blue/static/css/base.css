@@ -1,0 +1,17 @@
+
+dl#last_prices{
+  font-size:1.45em;
+}
+
+dl#last_prices dd{
+  color:#2211cc;
+}
+
+
+h1 {
+  font-family: 'Ruda', sans-serif;
+}
+
+h3 {
+  font-family: 'Roboto Slab', serif;
+}
