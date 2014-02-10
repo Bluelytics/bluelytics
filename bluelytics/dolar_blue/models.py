@@ -11,6 +11,7 @@ class DolarBlue(models.Model):
     value_buy = models.DecimalField(decimal_places=6, max_digits=10)
     value_sell = models.DecimalField(decimal_places=6, max_digits=10)
     source = models.CharField(max_length=30)
+    date = models.DateTimeField()
 
     def _get_value_avg(self):
        "Returns the average price"
@@ -27,4 +28,3 @@ class DolarBlue(models.Model):
         'value_sell': self.value_sell,
         'value_avg': self.value_avg}
         ,cls=DecimalEncoder)
->>>>>>> d9bd5e4568709a6aa0b8629c7a95527c35de7bbf
