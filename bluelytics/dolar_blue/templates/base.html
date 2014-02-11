@@ -1,6 +1,4 @@
 {% load staticfiles %}
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,6 +9,9 @@
     <meta name="author" content="">
 
     <title>bluelytics</title>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
@@ -38,28 +39,47 @@
       ga('send', 'pageview');
 
     </script>
+
+     {% block extrahead %}{% endblock %}
+      <style>
+        body { padding-top: 70px; }
+      </style>
   </head>
 
   <body>
 
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav_bar_collapsed">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">bluelytics</a>
+        </div>
+
+        <div class="collapse navbar-collapse pull-right" id="nav_bar_collapsed">
+        <ul class="nav navbar-nav">
+          <li>
             <a href="/"><span class="glyphicon glyphicon-home"></span> Inicio</a>
           </li>
-          <li class="active">
+          <li>
             <a href="/graph"><span class="glyphicon glyphicon-stats"></span> Grafico</a>
           </li>
-          <li class="active">
+          <li>
             <a href="/json/last_price"><span class="glyphicon glyphicon-cloud-download"></span> JSON</a>
           </li>
-          <li class="active">
+          <li>
             <a href="{{ request.path }}"><span class="glyphicon glyphicon-refresh"></span> Recargar</a>
           </li>
         </ul>
-        <h3 class="text-muted">bluelytics</h3>
       </div>
+    </nav>
+
+    <div class="container">
+     
 
       <div class="jumbotron">
         {% block content %}{% endblock %}

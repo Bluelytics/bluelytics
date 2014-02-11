@@ -1,13 +1,97 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load tz %}
+
+{% block extrahead %}
+<script src="{% static 'js/d3.v3.min.js' %}"></script>
+<script src="{% static 'js/rickshaw.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/rickshaw.min.css' %}">
+
+<script>
+$.ready = function(){
+  var blueData = {{ all_prices|safe }};
+  var sourceData = {{ all_sources|safe }};
+  var format = d3.time.format("%d/%m/%Y %H:%M:%S");
+
+  var transfBlueData = blueData.map(function(b){
+    b.epoch = format.parse(b.date).getTime();
+    return b;
+  });
+
+  var graphData = [];
+  var lineColors = ['#F3E9C6', '#BECCD8', '#FBC970', '#4E99D8', '#F7137A'];
+
+  for (key in sourceData){
+    var source = sourceData[key];
+    srcd = {
+      data: 
+        transfBlueData
+          .filter(function(d){return d.source == source;})
+          .map(function(d){return {x: d.epoch, y:d.value_avg};})
+      ,
+      name: source,
+      color: lineColors.pop()
+    }
+
+    graphData.push(srcd);
+  }
+  
+
+  var graph = new Rickshaw.Graph( {
+      element: document.querySelector("#dailychart"), 
+      renderer: 'line',
+      width: document.querySelector("#dailychart").width, 
+      height: 300, 
+      series: graphData
+  });
+
+  var legend = new Rickshaw.Graph.Legend({
+      graph: graph,
+      element: document.querySelector('#legend_dailychart')
+  });
+  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+      graph: graph,
+      legend: legend
+  });
+  var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+      graph: graph,
+      legend: legend
+  });
+
+  var xAxis = new Rickshaw.Graph.Axis.Time({
+      graph: graph
+  });
+
+  var yAxis = new Rickshaw.Graph.Axis.Y({
+      graph: graph
+  });
+  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+      graph: graph
+  } );
+
+  xAxis.render();
+  yAxis.render();
+  graph.render();
+};
+</script>
+{% endblock %}
+
+
 
 {% block content %}
 <h1>Dolar blue</h1>
-<h2>Evolucion</h2>
+<h2>Evolucion promedio compra/venta</h2>
+
+<div id="chart_container">
+  <div id="dailychart"></div>
+  <div id="legend_container">
+    <div id="smoother" title="Smoothing"></div>
+    <div id="legend_dailychart"></div>
+  </div>
+  <div id="slider"></div>
+</div>
 
 
-<script>
-  var blueData = {{ all_prices|safe }};
-
-</script>
 {% endblock %}
+
+

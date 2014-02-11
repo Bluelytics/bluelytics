@@ -9,9 +9,9 @@ from dolar_blue.models import DolarBlue, Source
 from dolar_blue.utils import DecimalEncoder, arg
 
 def lastPrice():
-  allSources = Source.objects.all()
+  all_sources = Source.objects.all()
   maxSources = []
-  for src in allSources:
+  for src in all_sources:
     record = DolarBlue.objects.filter(source__exact=src).order_by('-date')[:1].last()
     maxSources.append(record)
 
@@ -45,7 +45,9 @@ def convDolar(e):
 def blue_graph(request):
   all_prices = DolarBlue.objects.all()
   all_prices_dict = map(convDolar, all_prices)
+  all_sources = map(lambda x: x.source,Source.objects.all())
 
-  context = { 'all_prices': json.dumps(all_prices_dict, cls=DecimalEncoder) }
+  context = { 'all_prices': json.dumps(all_prices_dict, cls=DecimalEncoder),
+              'all_sources': json.dumps(all_sources) }
 
   return render(request, 'graph.html', context)
