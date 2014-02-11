@@ -46,10 +46,16 @@
       <div class="header">
         <ul class="nav nav-pills pull-right">
           <li class="active">
+            <a href="/"><span class="glyphicon glyphicon-home"></span> Inicio</a>
+          </li>
+          <li class="active">
+            <a href="/graph"><span class="glyphicon glyphicon-stats"></span> Grafico</a>
+          </li>
+          <li class="active">
             <a href="/json/last_price"><span class="glyphicon glyphicon-cloud-download"></span> JSON</a>
           </li>
           <li class="active">
-            <a href="/"><span class="glyphicon glyphicon-refresh"></span></a>
+            <a href="{{ request.path }}"><span class="glyphicon glyphicon-refresh"></span> Recargar</a>
           </li>
         </ul>
         <h3 class="text-muted">bluelytics</h3>

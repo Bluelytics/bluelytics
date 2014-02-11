@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load tz %}
+
+{% block content %}
+<h1>Dolar blue</h1>
+<h2>Evolucion</h2>
+
+
+<script>
+  var blueData = {{ all_prices|safe }};
+
+</script>
+{% endblock %}
