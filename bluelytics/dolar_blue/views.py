@@ -2,13 +2,27 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import timezone
 from django.core import serializers
+from django.db.models import Max, Min
 import json, pytz
 
-from dolar_blue.models import DolarBlue
+from dolar_blue.models import DolarBlue, Source
 from dolar_blue.utils import DecimalEncoder, arg
 
 def lastPrice():
-  return DolarBlue.objects.last()
+  allSources = Source.objects.all()
+  maxSources = []
+  for src in allSources:
+    record = DolarBlue.objects.filter(source__exact=src).order_by('-date')[:1].last()
+    maxSources.append(record)
+
+  lp={
+    'date':max([r.date for r in maxSources]),
+    'value_buy':sum([r.value_buy for r in maxSources])/len(maxSources),
+    'value_sell':sum([r.value_sell for r in maxSources])/len(maxSources),
+    'value_avg':sum([r.value_avg for r in maxSources])/len(maxSources)
+  }
+
+  return lp
 
 def index(request):
   timezone.activate(pytz.timezone("America/Argentina/Buenos_Aires"))
@@ -25,7 +39,8 @@ def convDolar(e):
   return {'date': e.date.astimezone(arg).strftime("%d/%m/%Y %H:%M:%S"),
         'value_buy': e.value_buy,
         'value_sell': e.value_sell,
-        'value_avg': e.value_avg}
+        'value_avg': e.value_avg,
+        'source': e.source.source}
 
 def blue_graph(request):
   all_prices = DolarBlue.objects.all()
