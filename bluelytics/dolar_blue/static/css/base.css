@@ -1,10 +1,24 @@
 
-dl#last_prices{
+div#last_prices div.row div{
   font-size:1.45em;
 }
 
-dl#last_prices dd{
+div#last_prices div.row div.value{
   color:#2211cc;
+}
+
+div#last_prices div.row{
+  margin-bottom:10px;
+}
+
+@media (min-width: 996px) {
+  div#last_prices div.row div.name{
+    text-align: right;
+  }
+
+  div#last_prices div.row div.value{
+    text-align: left;
+  }
 }
 
 
@@ -15,3 +29,5 @@ h1 {
 a.navbar-brand {
   font-family: 'Roboto Slab', serif;
 }
+
+body { padding-top: 70px; }

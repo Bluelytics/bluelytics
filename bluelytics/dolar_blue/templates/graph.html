@@ -2,6 +2,27 @@
 {% load staticfiles %}
 {% load tz %}
 
+
+{% block content %}
+<h1>Dolar blue</h1>
+<h2>Evolucion promedio compra/venta</h2>
+
+<div id="chart_container">
+  <div id="dailychart"></div>
+  <div id="legend_container">
+    <div id="smoother" title="Smoothing"></div>
+    <div id="legend_dailychart"></div>
+  </div>
+  <div id="slider"></div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+
 {% block extrahead %}
 <script src="{% static 'js/d3.v3.min.js' %}"></script>
 <script src="{% static 'js/rickshaw.min.js' %}"></script>
@@ -14,23 +35,24 @@ $.ready = function(){
   var format = d3.time.format("%d/%m/%Y %H:%M:%S");
 
   var transfBlueData = blueData.map(function(b){
-    b.epoch = format.parse(b.date).getTime();
+    b.epoch = format.parse(b.date).getTime()/1000;
     return b;
   });
 
   var graphData = [];
-  var lineColors = ['#F3E9C6', '#BECCD8', '#FBC970', '#4E99D8', '#F7137A'];
+  var palette = new Rickshaw.Color.Palette();
 
   for (key in sourceData){
-    var source = sourceData[key];
+    var source = sourceData[key].name;
+    var sourceDesc = sourceData[key].description;
     srcd = {
       data: 
         transfBlueData
           .filter(function(d){return d.source == source;})
           .map(function(d){return {x: d.epoch, y:d.value_avg};})
       ,
-      name: source,
-      color: lineColors.pop()
+      name: sourceDesc,
+      color: palette.color()
     }
 
     graphData.push(srcd);
@@ -75,23 +97,3 @@ $.ready = function(){
 };
 </script>
 {% endblock %}
-
-
-
-{% block content %}
-<h1>Dolar blue</h1>
-<h2>Evolucion promedio compra/venta</h2>
-
-<div id="chart_container">
-  <div id="dailychart"></div>
-  <div id="legend_container">
-    <div id="smoother" title="Smoothing"></div>
-    <div id="legend_dailychart"></div>
-  </div>
-  <div id="slider"></div>
-</div>
-
-
-{% endblock %}
-
-

@@ -2,22 +2,96 @@
 {% load tz %}
 
 {% block content %}
+<ul id="source_select" class="nav nav-pills pull-right">
+  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:1">Promedio</a></li>
+</ul>
+<br>
+
 <h1>Dolar blue</h1>
 <h2>Valor</h2>
 <p class="lead">Ultima actualización:</p>
 <p class="date">{% localtime on %}{{ last_price.date }}{% endlocaltime %}</p>
 <br>
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <dl id="last_prices" class="dl-horizontal">
-      <dt>Compra: </dt>
-      <dd>{{ last_price.value_buy }}</dd>
-      <dt>Intermedio: </dt>
-      <dd>{{ last_price.value_avg }}</dd>
-      <dt>Venta: </dt>
-      <dd>{{ last_price.value_sell }}</dd>
-    </dl>
+    <div id="last_prices">
+      <div class="row" id="valorCompra">
+        <div class="col-md-6 name">Compra:</div>
+        <div class="col-md-6 value">{{ last_price.value_buy }}</div>
+      </div>
+      <div class="row" id="valorIntermedio">
+        <div class="col-md-6 name">Intermedio:</div>
+        <div class="col-md-6 value">{{ last_price.value_avg }}</div>
+      </div>
+      <div class="row" id="valorVenta">
+        <div class="col-md-6 name">Venta:</div>
+        <div class="col-md-6 value">{{ last_price.value_sell }}</div>
+      </div>
     </div>
 </div>
+
+{% endblock %}
+
+
+{% block extrahead %}
+
+
+<script>
+var max_sources = {{ max_sources|safe }};
+var all_sources = {{ all_sources|safe }};
+
+function sumVar(varName){
+  var passVar = varName;
+  return function(a,b){
+     return  a + b[passVar];
+   };
+}
+
+function set_source(sourceObj){
+  document.querySelector('div#valorCompra div.value').innerText = sourceObj.value_buy.toFixed(4);
+  document.querySelector('div#valorVenta div.value').innerText = sourceObj.value_sell.toFixed(4);
+  document.querySelector('div#valorIntermedio div.value').innerText = sourceObj.value_avg .toFixed(4);
+  return true;
+}
+
+function switch_source(el){
+
+  var source = el.getAttribute('data-source');
+  if (resolve_set_source(source)){
+    $('ul#source_select li.active').removeClass('active');
+    $('ul#source_select li[data-source="'+source+'"]').addClass('active');
+  }
+}
+
+function resolve_set_source(source){
+  var resolved_source;
+  if(source == "average"){
+    resolved_source = {
+      'value_sell': max_sources.reduce(sumVar('value_sell'), 0)/max_sources.length,
+      'value_buy': max_sources.reduce(sumVar('value_buy'), 0)/max_sources.length,
+      'value_avg': max_sources.reduce(sumVar('value_avg'), 0)/max_sources.length,
+    };
+  }else{
+    search = $.grep(max_sources, function(s){return s.source == source;});
+
+    if (search.length == 0){return;}
+    else
+      resolved_source = search[0];
+  }
+
+  return set_source(resolved_source);
+}
+
+$.ready = function(){
+  resolve_set_source('average');
+
+  var src_sel = $('ul#source_select');
+  for (key in all_sources){
+    var src = all_sources[key];
+    var nel = $.parseHTML('<li data-source="'+src.name+'" onclick="switch_source(this)"><a href="javascript:1">'+src.description+'</a></li>');
+    src_sel.append(nel);
+  }
+};
+
+</script>
 
 {% endblock %}
