@@ -12,7 +12,7 @@ def maxSources():
   all_sources = Source.objects.all()
   maxSources = []
   for src in all_sources:
-    record = DolarBlue.objects.filter(source__exact=src).order_by('-date')[:1].last()
+    record = DolarBlue.objects.filter(source__exact=src).order_by('-date').first()
     maxSources.append(record)
 
   return maxSources
