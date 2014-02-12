@@ -31,3 +31,13 @@ a.navbar-brand {
 }
 
 body { padding-top: 70px; }
+
+div#last_update {
+  margin-top:15px;
+}
+
+div#last_update p {
+  font-size:0.9em;
+  font-weight: bold;
+  font-style: italic;
+}
