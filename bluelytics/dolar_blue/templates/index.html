@@ -3,15 +3,12 @@
 
 {% block content %}
 <ul id="source_select" class="nav nav-pills pull-right">
-  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:1">Promedio</a></li>
+  <li class="active" data-source="average" onclick="switch_source(this)"><a href="#">Promedio</a></li>
 </ul>
 <br>
 
 <h1>Dolar blue</h1>
 <h2>Valor</h2>
-<p class="lead">Ultima actualización:</p>
-<p class="date">{% localtime on %}{{ last_price.date }}{% endlocaltime %}</p>
-<br>
 <div class="row">
     <div id="last_prices">
       <div class="row" id="valorCompra">
@@ -27,6 +24,11 @@
         <div class="col-md-6 value">{{ last_price.value_sell }}</div>
       </div>
     </div>
+</div>
+
+<div id="last_update">
+  <p class="date_title">Ultima actualización:</p>
+  <p class="date"></p>
 </div>
 
 {% endblock %}
@@ -47,9 +49,16 @@ function sumVar(varName){
 }
 
 function set_source(sourceObj){
-  document.querySelector('div#valorCompra div.value').innerText = sourceObj.value_buy.toFixed(4);
-  document.querySelector('div#valorVenta div.value').innerText = sourceObj.value_sell.toFixed(4);
-  document.querySelector('div#valorIntermedio div.value').innerText = sourceObj.value_avg .toFixed(4);
+  document.querySelector('div#valorCompra div.value').innerHTML = sourceObj.value_buy.toFixed(4);
+  document.querySelector('div#valorVenta div.value').innerHTML = sourceObj.value_sell.toFixed(4);
+  document.querySelector('div#valorIntermedio div.value').innerHTML = sourceObj.value_avg .toFixed(4);
+
+  if (sourceObj.date){
+    document.querySelector('div#last_update p.date').innerHTML = sourceObj.date;
+    $('div#last_update').show();
+  }else{
+    $('div#last_update').hide();
+  }
   return true;
 }
 
@@ -71,7 +80,7 @@ function resolve_set_source(source){
       'value_avg': max_sources.reduce(sumVar('value_avg'), 0)/max_sources.length,
     };
   }else{
-    search = $.grep(max_sources, function(s){return s.source == source;});
+    var search = $.grep(max_sources, function(s){return s.source == source;});
 
     if (search.length == 0){return;}
     else
@@ -87,7 +96,7 @@ $.ready = function(){
   var src_sel = $('ul#source_select');
   for (key in all_sources){
     var src = all_sources[key];
-    var nel = $.parseHTML('<li data-source="'+src.name+'" onclick="switch_source(this)"><a href="javascript:1">'+src.description+'</a></li>');
+    var nel = $.parseHTML('<li data-source="'+src.name+'" onclick="switch_source(this)"><a href="#">'+src.description+'</a></li>');
     src_sel.append(nel);
   }
 };
