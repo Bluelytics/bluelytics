@@ -7,13 +7,14 @@
 <h1>Dolar blue</h1>
 <h2>Evolucion promedio compra/venta</h2>
 
-<div id="chart_container">
-  <div id="dailychart"></div>
-  <div id="legend_container">
-    <div id="smoother" title="Smoothing"></div>
-    <div id="legend_dailychart"></div>
+<div id="dailychart">
+  <div class="legend_container">
+    <div class="smoother" title="Smoothing"></div>
+    <div class="legend"></div>
   </div>
-  <div id="slider"></div>
+  <div class="chart"></div>
+  <br>
+  <div class="slider"></div>
 </div>
 {% endblock %}
 
@@ -31,7 +32,7 @@
 </style>
 
 <script>
-$.ready = function(){
+$ (document).ready (function(){
   var blueData = {{ all_prices|safe }};
   var sourceData = {{ all_sources|safe }};
   var format = d3.time.format("%d/%m/%Y %H:%M:%S");
@@ -62,9 +63,9 @@ $.ready = function(){
   
 
   var graph = new Rickshaw.Graph( {
-      element: document.querySelector("#dailychart"), 
+      element: document.querySelector("div#dailychart > div.chart"), 
       renderer: 'line',
-      width: document.querySelector("#dailychart").width, 
+      width: document.querySelector("div#dailychart > div.chart").width, 
       height: 300, 
       series: graphData,
       min:7
@@ -72,7 +73,7 @@ $.ready = function(){
 
   var legend = new Rickshaw.Graph.Legend({
       graph: graph,
-      element: document.querySelector('#legend_dailychart')
+      element: document.querySelector('div#dailychart > div.legend_container > div.legend')
   });
   var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
       graph: graph,
@@ -82,6 +83,17 @@ $.ready = function(){
       graph: graph,
       legend: legend
   });
+
+
+  var slider = new Rickshaw.Graph.RangeSlider.Preview({
+      graph: graph,
+      element: document.querySelector('div#dailychart > div.slider')
+  });
+
+  var previewXAxis = new Rickshaw.Graph.Axis.Time({
+    graph: slider.previews[0]
+  });
+
 
   var xAxis = new Rickshaw.Graph.Axis.Time({
       graph: graph
@@ -100,9 +112,10 @@ $.ready = function(){
     }
   } );
 
+  previewXAxis.render();
   xAxis.render();
   yAxis.render();
   graph.render();
-};
+});
 </script>
 {% endblock %}
