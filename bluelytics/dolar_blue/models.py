@@ -10,6 +10,10 @@ class Source(models.Model):
     def __json__(self):
       return source
 
+    def __unicode__(self):
+      return self.source
+
+
 class DolarBlue(models.Model):
     value_buy = models.DecimalField(decimal_places=4, max_digits=10)
     value_sell = models.DecimalField(decimal_places=4, max_digits=10)
@@ -29,3 +33,6 @@ class DolarBlue(models.Model):
         'value_sell': self.value_sell,
         'value_avg': self.value_avg}
         ,cls=DecimalEncoder)
+
+    def __unicode__(self):
+      return self.source.source

@@ -32,12 +32,46 @@
 </style>
 
 <script>
-$ (document).ready (function(){
+$(document).ready (function(){
+    function union(array1, array2) {
+        var hash = {}, union = [];
+        $.each($.merge($.merge([], array1), array2), function (index, value) { hash[value] = value; });
+        $.each(hash, function (key, value) { union.push(key); } );
+        return union;
+    }
+
   var blueData = {{ all_prices|safe }};
   var sourceData = {{ all_sources|safe }};
   var format = d3.time.format("%d/%m/%Y %H:%M:%S");
 
-  var transfBlueData = blueData.map(function(b){
+  var add_20perc = blueData
+    .filter(function(e){return e.source == "oficial";})
+    .map(function(e){
+              d=jQuery.extend({},e);
+              d.source="oficial_mas20";
+              d.value_avg *= 1.20;
+              return d;
+            })
+  ;
+
+  var add_35perc = blueData
+    .filter(function(e){return e.source == "oficial";})
+    .map(function(e){
+                d=jQuery.extend({},e);
+                d.source="oficial_mas35";
+                d.value_avg *= 1.35;
+                return d;
+            })
+  ;
+
+  blueFixed = jQuery.merge(jQuery.merge(add_20perc, add_35perc), blueData);
+
+  var label_20perc = {"name": "oficial_mas20", "description": "Oficial + 20%"};
+  var label_35perc = {"name": "oficial_mas35", "description": "Oficial + 35%"};
+  sourceData.push(label_20perc);
+  sourceData.push(label_35perc);
+
+  var transfBlueData = blueFixed.map(function(b){
     b.epoch = format.parse(b.date).getTime()/1000;
     return b;
   });
@@ -52,7 +86,7 @@ $ (document).ready (function(){
       data: 
         transfBlueData
           .filter(function(d){return d.source == source;})
-          .map(function(d){return {x: d.epoch, y:d.value_avg};})
+          .map(function(d){return {x: d.epoch, y:+(d.value_avg.toFixed(4))};})
       ,
       name: sourceDesc,
       color: palette.color()
