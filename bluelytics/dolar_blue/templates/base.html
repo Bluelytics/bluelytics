@@ -43,6 +43,15 @@
   </head>
 
   <body>
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=180099255401408";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -83,6 +92,7 @@
 
       <div class="footer">
         <p>Creado por <a href="http://www.sicarul.com.ar">Pablo Seibelt</a></p>
+        <div class="fb-like-box" data-href="http://www.facebook.com/bluelytics" data-colorscheme="light" data-show-faces="false" data-header="false" data-stream="false" data-show-border="false"></div>
       </div>
 
     </div> <!-- /container -->

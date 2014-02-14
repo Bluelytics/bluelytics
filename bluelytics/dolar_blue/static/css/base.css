@@ -41,3 +41,11 @@ div#last_update p {
   font-weight: bold;
   font-style: italic;
 }
+
+
+.footer p{
+  float:left;
+}
+.footer div {
+  float:right;
+}
