@@ -2,112 +2,244 @@
 {% load staticfiles %}
 {% load tz %}
 
+{% block title %}
+  <title>bluelytics - Evolucion dólar blue</title>
+{% endblock %}
 
 {% block content %}
-<h1>Dolar blue</h1>
-<h2>Evolucion promedio compra/venta</h2>
+<h1>Dólar blue</h1>
+<h2>Promedio compra-venta</h2>
 
-<div id="chart_container">
-  <div id="dailychart"></div>
-  <div id="legend_container">
-    <div id="smoother" title="Smoothing"></div>
-    <div id="legend_dailychart"></div>
+<h3>Evolucion diaria</h3>
+
+<div id="dailychart">
+  <div class="chart_container">
+    <div class="chart"></div>
+    <br>
+    <div class="slider"></div>
   </div>
-  <div id="slider"></div>
+  <div class="legend_container">
+    <div class="smoother" title="Smoothing"></div>
+    <div class="legend"></div>
+  </div>
 </div>
 
+
+<h3>Evolucion detallada</h3>
+
+<div id="hourlychart">
+  <div class="chart_container">
+    <div class="chart"></div>
+    <br>
+    <div class="slider"></div>
+  </div>
+  <div class="legend_container">
+    <div class="smoother" title="Smoothing"></div>
+    <div class="legend"></div>
+  </div>
+</div>
 
 {% endblock %}
 
 
-
-
-
 {% block extrahead %}
-<script src="{% static 'js/d3.v3.min.js' %}"></script>
-<script src="{% static 'js/rickshaw.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/rickshaw.min.css' %}">
-
 <style>
 .rickshaw_graph .detail .x_label { display: none }
 .rickshaw_graph .detail .item { line-height: 1.4; padding: 0.5em }
 .detail_swatch { float: right; display: inline-block; width: 10px; height: 10px; margin: 0 4px 0 0 }
 .rickshaw_graph .detail .date { color: #a0a0a0 }
+
+.legend_container,.chart_container{
+  display:inline-block;
+  position: relative;
+}
+
+.legend_container {
+  vertical-align: top;
+}
+
+.chart_container {
+  width:60%;
+}
+
 </style>
 
 <script>
-$.ready = function(){
+$(document).ready (function(){
+    function union(array1, array2) {
+        var hash = {}, union = [];
+        $.each($.merge($.merge([], array1), array2), function (index, value) { hash[value] = value; });
+        $.each(hash, function (key, value) { union.push(key); } );
+        return union;
+    }
+
   var blueData = {{ all_prices|safe }};
   var sourceData = {{ all_sources|safe }};
   var format = d3.time.format("%d/%m/%Y %H:%M:%S");
+  var format_datepart = d3.time.format("%d/%m/%Y");
 
-  var transfBlueData = blueData.map(function(b){
-    b.epoch = format.parse(b.date).getTime()/1000;
+  var add_20perc = _.chain(blueData)
+    .filter(function(e){return e.source == "oficial";})
+    .map(function(e){
+              d=jQuery.extend({},e);
+              d.source="oficial_mas20";
+              d.value_avg *= 1.20;
+              return d;
+            })
+    .value()
+  ;
+
+  var add_35perc = _.chain(blueData)
+    .filter(function(e){return e.source == "oficial";})
+    .map(function(e){
+                d=jQuery.extend({},e);
+                d.source="oficial_mas35";
+                d.value_avg *= 1.35;
+                return d;
+            })
+    .value()
+  ;
+
+  blueFixed = jQuery.merge(jQuery.merge(add_20perc, add_35perc), blueData);
+
+  var label_20perc = {"name": "oficial_mas20", "description": "Oficial + 20%"};
+  var label_35perc = {"name": "oficial_mas35", "description": "Oficial + 35%"};
+  sourceData.push(label_20perc);
+  sourceData.push(label_35perc);
+
+  var transfBlueData = _.chain(blueFixed).map(function(b){
+    var tmp_date = format.parse(b.date);
+    b.epoch = tmp_date.getTime()/1000;
+    b.datepart = format_datepart(tmp_date);
     return b;
+  }).value();
+
+  var bySourceDate = _.groupBy(transfBlueData, function(a){return a.source+a.datepart;});
+
+  var dailyBlueData = _.map(bySourceDate, function(d){
+    return _.max(d, function(a){return a.epoch;});
   });
 
-  var graphData = [];
-  var palette = new Rickshaw.Color.Palette();
+  function transformData(inputData, variable){
+    var graphData = [];
+    var palette = new Rickshaw.Color.Palette();
 
-  for (key in sourceData){
-    var source = sourceData[key].name;
-    var sourceDesc = sourceData[key].description;
-    srcd = {
-      data: 
-        transfBlueData
-          .filter(function(d){return d.source == source;})
-          .map(function(d){return {x: d.epoch, y:d.value_avg};})
-      ,
-      name: sourceDesc,
-      color: palette.color()
+    for (key in sourceData){
+      var source = sourceData[key].name;
+      var sourceDesc = sourceData[key].description;
+      srcd = {
+        data: 
+          inputData
+            .filter(function(d){return d.source == source;})
+            .map(function(d){return {x: d.epoch, y:+(d[variable].toFixed(4))};})
+        ,
+        name: sourceDesc,
+        color: palette.color()
+      }
+
+      graphData.push(srcd);
     }
 
-    graphData.push(srcd);
+    return graphData;
   }
-  
 
-  var graph = new Rickshaw.Graph( {
-      element: document.querySelector("#dailychart"), 
-      renderer: 'line',
-      width: document.querySelector("#dailychart").width, 
-      height: 300, 
-      series: graphData,
-      min:7
-  });
+  function generateGraph(id, graphData){
 
-  var legend = new Rickshaw.Graph.Legend({
+    var graph = new Rickshaw.Graph( {
+        element: document.querySelector("div#"+id+" div.chart"), 
+        renderer: 'line',
+        series: graphData,
+        min:7
+    });
+
+    var legend = new Rickshaw.Graph.Legend({
+        graph: graph,
+        element: document.querySelector("div#"+id+" > div.legend_container > div.legend")
+    });
+    var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+        graph: graph,
+        legend: legend
+    });
+    var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+        graph: graph,
+        legend: legend
+    });
+
+
+    var slider = new Rickshaw.Graph.RangeSlider.Preview({
+        graph: graph,
+        element: document.querySelector("div#"+id+" div.slider")
+    });
+
+    var previewXAxis = new Rickshaw.Graph.Axis.Time({
+      graph: slider.previews[0]
+    });
+
+
+    var xAxis = new Rickshaw.Graph.Axis.Time({
+        graph: graph
+    });
+
+    var yAxis = new Rickshaw.Graph.Axis.Y({
+        graph: graph
+    });
+    var hoverDetail = new Rickshaw.Graph.HoverDetail( {
       graph: graph,
-      element: document.querySelector('#legend_dailychart')
-  });
-  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
-      graph: graph,
-      legend: legend
-  });
-  var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-      graph: graph,
-      legend: legend
-  });
+      formatter: function(series, x, y) {
+        var date = '<span class="date">' + new Date(x * 1000).toString() + '</span>';
+        var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+        var content = swatch + series.name + ": " + parseFloat(y) + '<br>' + date;
+        return content;
+      }
+    } );
 
-  var xAxis = new Rickshaw.Graph.Axis.Time({
-      graph: graph
-  });
+    previewXAxis.render();
+    xAxis.render();
+    yAxis.render();
+    graph.render();
 
-  var yAxis = new Rickshaw.Graph.Axis.Y({
-      graph: graph
-  });
-  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-    graph: graph,
-    formatter: function(series, x, y) {
-      var date = '<span class="date">' + new Date(x * 1000).toUTCString() + '</span>';
-      var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
-      var content = swatch + series.name + ": " + parseFloat(y) + '<br>' + date;
-      return content;
-    }
-  } );
+    var updGraph = function() {
+      graph.configure({
+        width: document.querySelector("div#"+id+" div.chart").width,
+        height: document.querySelector("div#"+id+" div.chart").width * 0.66
+      });
+      graph.update();
+    };
 
-  xAxis.render();
-  yAxis.render();
-  graph.render();
-};
+    updGraph();
+
+    $( window ).resize(updGraph);
+
+    return graph;
+  }
+
+  var dailyGraphReady = {
+    'value_sell':transformData(dailyBlueData, 'value_sell'),
+    'value_avg':transformData(dailyBlueData, 'value_avg'),
+    'value_buy':transformData(dailyBlueData, 'value_buy')
+  };
+
+  var hourlyGraphReady = {
+    'value_sell':transformData(transfBlueData, 'value_sell'),
+    'value_avg':transformData(transfBlueData, 'value_avg'),
+    'value_buy':transformData(transfBlueData, 'value_buy')
+  };
+
+  var activeDailyData = dailyGraphReady['value_avg'];
+  var activeHourlyData = hourlyGraphReady['value_avg'];
+
+
+  var dailyGraph = generateGraph("dailychart", activeDailyData);
+  var hourlyGraph = generateGraph("hourlychart", activeHourlyData);
+
+  function switchVariable(variable){
+    activeDailyData = dailyGraphReady[variable];
+    activeHourlyData = hourlyGraphReady[variable];
+    dailyGraph.render();
+    hourlyGraph.render();
+  }
+
+
+});
 </script>
 {% endblock %}

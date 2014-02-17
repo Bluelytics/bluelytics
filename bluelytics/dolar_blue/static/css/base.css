@@ -26,7 +26,7 @@ h1 {
   font-family: 'Ruda', sans-serif;
 }
 
-a.navbar-brand {
+.navbar-brand {
   font-family: 'Roboto Slab', serif;
 }
 
@@ -40,4 +40,19 @@ div#last_update p {
   font-size:0.9em;
   font-weight: bold;
   font-style: italic;
+}
+
+.footer p{
+  float:left;
+}
+.footer div {
+  float:right;
+}
+
+h1.oficial{
+  color: #292;
+}
+
+h1.blue{
+  color: #229;
 }
