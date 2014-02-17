@@ -48,3 +48,11 @@ div#last_update p {
 .footer div {
   float:right;
 }
+
+h1.oficial{
+  color: #292;
+}
+
+h1.blue{
+  color: #229;
+}

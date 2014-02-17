@@ -14,7 +14,7 @@
 </ul>
 <br>
 
-<h1>Dólar blue</h1>
+<h1 class="blue">Dólar blue</h1>
 <h2>Valor</h2>
 <div class="row">
     <div id="last_prices">
@@ -71,10 +71,21 @@ function set_source(sourceObj, multiplier){
     $('div#last_update').hide();
   }
 
+  var head = $('h1');
   if (sourceObj.source == 'oficial'){
-    $('h1').text("Dólar oficial");
+
+    head.text("Dólar oficial");
+    if(head.hasClass('blue')){
+      head.removeClass('blue');
+      head.addClass('oficial');
+    }
+    
   }else{
-    $('h1').text("Dólar blue");
+    head.text("Dólar blue");
+    if(head.hasClass('oficial')){
+      head.removeClass('oficial');
+      head.addClass('blue');
+    }
   }
 
   return true;
