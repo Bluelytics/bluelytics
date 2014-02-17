@@ -2,7 +2,7 @@
 {% load tz %}
 
 {% block title %}
-  <title>bluelytics - Precio dolar Blue</title>
+  <title>bluelytics - Precio dólar blue</title>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
 </ul>
 <br>
 
-<h1>Dolar blue</h1>
+<h1>Dólar blue</h1>
 <h2>Valor</h2>
 <div class="row">
     <div id="last_prices">
@@ -72,9 +72,9 @@ function set_source(sourceObj, multiplier){
   }
 
   if (sourceObj.source == 'oficial'){
-    $('h1').innerHTML = "Dolar oficial";
+    $('h1').text("Dólar oficial");
   }else{
-    $('h1').innerHTML = "Dolar blue";
+    $('h1').text("Dólar blue");
   }
 
   return true;
