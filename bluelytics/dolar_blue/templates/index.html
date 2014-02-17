@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load tz %}
 
+{% block title %}
+  <title>bluelytics - Precio dolar Blue</title>
+{% endblock %}
+
 {% block content %}
 <ul id="source_select" class="nav nav-pills pull-right">
   <li data-source="oficial" onclick="switch_source(this)"><a href="#">Oficial</a></li>
@@ -66,6 +70,13 @@ function set_source(sourceObj, multiplier){
   }else{
     $('div#last_update').hide();
   }
+
+  if (sourceObj.source == 'oficial'){
+    $('h1').innerHTML = "Dolar oficial";
+  }else{
+    $('h1').innerHTML = "Dolar blue";
+  }
+
   return true;
 }
 
