@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %}
-<h1>Dolar blue</h1>
-<h2>Promedio compra/venta</h2>
+<h1>Dólar blue</h1>
+<h2>Promedio compra-venta</h2>
 
 <h3>Evolucion diaria</h3>
 
@@ -120,8 +120,7 @@ $(document).ready (function(){
     return _.max(d, function(a){return a.epoch;});
   });
 
-  function generateGraph(id, inputData){
-
+  function transformData(inputData, variable){
     var graphData = [];
     var palette = new Rickshaw.Color.Palette();
 
@@ -132,7 +131,7 @@ $(document).ready (function(){
         data: 
           inputData
             .filter(function(d){return d.source == source;})
-            .map(function(d){return {x: d.epoch, y:+(d.value_avg.toFixed(4))};})
+            .map(function(d){return {x: d.epoch, y:+(d[variable].toFixed(4))};})
         ,
         name: sourceDesc,
         color: palette.color()
@@ -140,13 +139,15 @@ $(document).ready (function(){
 
       graphData.push(srcd);
     }
-    
+
+    return graphData;
+  }
+
+  function generateGraph(id, graphData){
 
     var graph = new Rickshaw.Graph( {
         element: document.querySelector("div#"+id+" div.chart"), 
         renderer: 'line',
-        width: document.querySelector("div#"+id+" div.chart").width, 
-        height: 300, 
         series: graphData,
         min:7
     });
@@ -197,16 +198,47 @@ $(document).ready (function(){
     yAxis.render();
     graph.render();
 
-    $( window ).resize(function() {
-      previewXAxis.update();
-      xAxis.update();
-      yAxis.update();
+    var updGraph = function() {
+      graph.configure({
+        width: document.querySelector("div#"+id+" div.chart").width,
+        height: document.querySelector("div#"+id+" div.chart").width * 0.66
+      });
       graph.update();
-    });
+    };
+
+    updGraph();
+
+    $( window ).resize(updGraph);
+
+    return graph;
   }
 
-  generateGraph("dailychart", dailyBlueData);
-  generateGraph("hourlychart", transfBlueData);
+  var dailyGraphReady = {
+    'value_sell':transformData(dailyBlueData, 'value_sell'),
+    'value_avg':transformData(dailyBlueData, 'value_avg'),
+    'value_buy':transformData(dailyBlueData, 'value_buy')
+  };
+
+  var hourlyGraphReady = {
+    'value_sell':transformData(transfBlueData, 'value_sell'),
+    'value_avg':transformData(transfBlueData, 'value_avg'),
+    'value_buy':transformData(transfBlueData, 'value_buy')
+  };
+
+  var activeDailyData = dailyGraphReady['value_avg'];
+  var activeHourlyData = hourlyGraphReady['value_avg'];
+
+
+  var dailyGraph = generateGraph("dailychart", activeDailyData);
+  var hourlyGraph = generateGraph("hourlychart", activeHourlyData);
+
+  function switchVariable(variable){
+    activeDailyData = dailyGraphReady[variable];
+    activeHourlyData = hourlyGraphReady[variable];
+    dailyGraph.render();
+    hourlyGraph.render();
+  }
+
 
 });
 </script>
