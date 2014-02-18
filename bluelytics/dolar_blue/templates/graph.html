@@ -7,36 +7,33 @@
 {% endblock %}
 
 {% block content %}
+
+<ul id="var_select" class="nav nav-pills pull-right">
+  <li data-var="buy" onclick="switch_variable(this)"><a href="#">Compra</a></li>
+  <li class="active" data-var="avg" onclick="switch_variable(this)"><a href="#">Promedio</a></li>
+  <li data-var="sell" onclick="switch_variable(this)"><a href="#">Venta</a></li>
+</ul>
+<br>
+
 <h1>Dólar blue</h1>
-<h2>Promedio compra-venta</h2>
 
-<h3>Evolucion diaria</h3>
+<h2>Evolucion diaria</h3>
 
-<div id="dailychart">
-  <div class="chart_container">
-    <div class="chart"></div>
-    <br>
-    <div class="slider"></div>
-  </div>
-  <div class="legend_container">
-    <div class="smoother" title="Smoothing"></div>
-    <div class="legend"></div>
-  </div>
+<div id="dailychart_sell" class="chart_block">
+</div>
+<div id="dailychart_avg" class="chart_block">
+</div>
+<div id="dailychart_buy" class="chart_block">
 </div>
 
 
-<h3>Evolucion detallada</h3>
+<h2>Evolucion detallada</h3>
 
-<div id="hourlychart">
-  <div class="chart_container">
-    <div class="chart"></div>
-    <br>
-    <div class="slider"></div>
-  </div>
-  <div class="legend_container">
-    <div class="smoother" title="Smoothing"></div>
-    <div class="legend"></div>
-  </div>
+<div id="hourlychart_sell" class="chart_block">
+</div>
+<div id="hourlychart_avg" class="chart_block">
+</div>
+<div id="hourlychart_buy" class="chart_block">
 </div>
 
 {% endblock %}
@@ -61,6 +58,11 @@
 .chart_container {
   width:60%;
 }
+
+.hidden{
+  display:none;
+}
+
 
 </style>
 
@@ -143,12 +145,23 @@ $(document).ready (function(){
     return graphData;
   }
 
-  function generateGraph(id, graphData){
+  function generateGraph(id, inputData){
+
+    var chartElement = $('div#' + id);
+    chartElement.append('<div class="chart_container"> \
+      <div class="chart"></div> \
+      <br> \
+      <div class="slider"></div> \
+    </div> \
+    <div class="legend_container"> \
+      <div class="smoother" title="Smoothing"></div> \
+      <div class="legend"></div> \
+    </div>');
 
     var graph = new Rickshaw.Graph( {
         element: document.querySelector("div#"+id+" div.chart"), 
         renderer: 'line',
-        series: graphData,
+        series: inputData,
         min:7
     });
 
@@ -225,21 +238,31 @@ $(document).ready (function(){
     'value_buy':transformData(transfBlueData, 'value_buy')
   };
 
-  var activeDailyData = dailyGraphReady['value_avg'];
-  var activeHourlyData = hourlyGraphReady['value_avg'];
+  var dailyGraph_avg = generateGraph("dailychart_sell", dailyGraphReady['value_sell']);
+  var dailyGraph_avg = generateGraph("dailychart_avg", dailyGraphReady['value_avg']);
+  var dailyGraph_avg = generateGraph("dailychart_buy", dailyGraphReady['value_buy']);
+  var hourlyGraph_avg = generateGraph("hourlychart_sell", hourlyGraphReady['value_sell']);
+  var hourlyGraph_avg = generateGraph("hourlychart_avg", hourlyGraphReady['value_avg']);
+  var hourlyGraph_avg = generateGraph("hourlychart_buy", hourlyGraphReady['value_buy']);
 
+  set_variable('avg');
+});
 
-  var dailyGraph = generateGraph("dailychart", activeDailyData);
-  var hourlyGraph = generateGraph("hourlychart", activeHourlyData);
+function set_variable(variable){
+  $('.chart_block').addClass('hidden');
+  $('#dailychart_'+variable).removeClass('hidden');
+  $('#hourlychart_'+variable).removeClass('hidden');
+}
 
-  function switchVariable(variable){
-    activeDailyData = dailyGraphReady[variable];
-    activeHourlyData = hourlyGraphReady[variable];
-    dailyGraph.render();
-    hourlyGraph.render();
+function switch_variable(el){
+    var variable = el.getAttribute('data-var');
+
+    set_variable(variable);
+
+    $('ul#var_select li.active').removeClass('active');
+    $(el).addClass('active');
   }
 
 
-});
 </script>
 {% endblock %}

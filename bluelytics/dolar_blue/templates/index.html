@@ -96,7 +96,7 @@ function switch_source(el){
   var source = el.getAttribute('data-source');
   if (resolve_set_source(source)){
     $('ul#source_select li.active').removeClass('active');
-    $('ul#source_select li[data-source="'+source+'"]').addClass('active');
+    $(el).addClass('active');
   }
 }
 
