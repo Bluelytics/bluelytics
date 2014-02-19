@@ -85,7 +85,9 @@ $(document).ready (function(){
     .map(function(e){
               d=jQuery.extend({},e);
               d.source="oficial_mas20";
+              d.value_sell *= 1.20;
               d.value_avg *= 1.20;
+              d.value_buy *= 1.20;
               return d;
             })
     .value()
@@ -96,7 +98,9 @@ $(document).ready (function(){
     .map(function(e){
                 d=jQuery.extend({},e);
                 d.source="oficial_mas35";
+                d.value_sell *= 1.35;
                 d.value_avg *= 1.35;
+                d.value_buy *= 1.35;
                 return d;
             })
     .value()
