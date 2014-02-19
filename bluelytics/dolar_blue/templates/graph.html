@@ -9,9 +9,9 @@
 {% block content %}
 
 <ul id="var_select" class="nav nav-pills pull-right">
-  <li data-var="buy" onclick="switch_variable(this)"><a href="#">Compra</a></li>
-  <li class="active" data-var="avg" onclick="switch_variable(this)"><a href="#">Promedio</a></li>
-  <li data-var="sell" onclick="switch_variable(this)"><a href="#">Venta</a></li>
+  <li data-var="buy" onclick="switch_variable(this)"><a href="javascript:void(0)">Compra</a></li>
+  <li class="active" data-var="avg" onclick="switch_variable(this)"><a href="javascript:void(0)">Promedio</a></li>
+  <li data-var="sell" onclick="switch_variable(this)"><a href="javascript:void(0)">Venta</a></li>
 </ul>
 <br>
 
@@ -244,6 +244,7 @@ function switch_variable(el){
 
     $('ul#var_select li.active').removeClass('active');
     $(el).addClass('active');
+    return false;
   }
 
 
