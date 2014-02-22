@@ -17,7 +17,7 @@
 
 <h1>Dólar blue</h1>
 
-<h2>Evolucion diaria</h3>
+<h2>Evolucion diaria</h2>
 
 <div id="dailychart_sell" class="chart_block">
 </div>
@@ -27,7 +27,7 @@
 </div>
 
 
-<h2>Evolucion detallada</h3>
+<h2>Evolucion detallada</h2>
 
 <div id="hourlychart_sell" class="chart_block">
 </div>
@@ -147,7 +147,9 @@ $(document).ready (function(){
 
   function generateGraph(id, inputData){
 
-    var chartElement = $('div#' + id);
+    var chart_id = "div#"+id;
+
+    var chartElement = $(chart_id);
     chartElement.append('<div class="chart_container"> \
       <div class="chart"></div> \
       <br> \
@@ -155,7 +157,7 @@ $(document).ready (function(){
     </div>');
 
     var graph = new Rickshaw.Graph( {
-        element: document.querySelector("div#"+id+" div.chart"), 
+        element: document.querySelector(chart_id + " > div.chart_container > div.chart"), 
         renderer: 'line',
         series: inputData,
         min:7
@@ -164,13 +166,12 @@ $(document).ready (function(){
 
     var slider = new Rickshaw.Graph.RangeSlider.Preview({
         graph: graph,
-        element: document.querySelector("div#"+id+" div.slider")
+        element: document.querySelector(chart_id+" div.slider")
     });
 
     var previewXAxis = new Rickshaw.Graph.Axis.Time({
       graph: slider.previews[0]
     });
-
 
     var xAxis = new Rickshaw.Graph.Axis.Time({
         graph: graph
@@ -189,22 +190,29 @@ $(document).ready (function(){
       }
     } );
 
-    previewXAxis.render();
-    xAxis.render();
-    yAxis.render();
-    graph.render();
 
     var updGraph = function() {
+      
+      var el = document.querySelector(chart_id+" div.chart");
+      
       graph.configure({
-        width: document.querySelector("div#"+id+" div.chart").width,
-        height: document.querySelector("div#"+id+" div.chart").width * 0.66
+        width: el.offsetWidth,
+        height: el.offsetWidth * 0.66
       });
-      graph.update();
+
+      slider.configure({
+        width:el.offsetWidth
+      });
+      slider.render();
+
+      previewXAxis.render();
+      xAxis.render();
+      yAxis.render();
+      graph.render();
     };
 
     updGraph();
-
-    $( window ).resize(updGraph);
+    window.addEventListener('resize', updGraph); 
 
     return graph;
   }
@@ -221,12 +229,12 @@ $(document).ready (function(){
     'value_buy':transformData(transfBlueData, 'value_buy')
   };
 
-  var dailyGraph_avg = generateGraph("dailychart_sell", dailyGraphReady['value_sell']);
+  var dailyGraph_sell = generateGraph("dailychart_sell", dailyGraphReady['value_sell']);
   var dailyGraph_avg = generateGraph("dailychart_avg", dailyGraphReady['value_avg']);
-  var dailyGraph_avg = generateGraph("dailychart_buy", dailyGraphReady['value_buy']);
-  var hourlyGraph_avg = generateGraph("hourlychart_sell", hourlyGraphReady['value_sell']);
+  var dailyGraph_buy = generateGraph("dailychart_buy", dailyGraphReady['value_buy']);
+  var hourlyGraph_sell = generateGraph("hourlychart_sell", hourlyGraphReady['value_sell']);
   var hourlyGraph_avg = generateGraph("hourlychart_avg", hourlyGraphReady['value_avg']);
-  var hourlyGraph_avg = generateGraph("hourlychart_buy", hourlyGraphReady['value_buy']);
+  var hourlyGraph_buy = generateGraph("hourlychart_buy", hourlyGraphReady['value_buy']);
 
   set_variable('avg');
 });

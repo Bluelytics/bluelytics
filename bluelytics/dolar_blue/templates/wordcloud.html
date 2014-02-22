@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load tz %}
+
+{% block title %}
+  <title>bluelytics - Evolucion dólar blue</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>Cobertura mediática del Dolar (USD) en Argentina</h1>
+
+<div class="row">
+  <div class="col-md-6">
+    <h2>Cobertura oficialista</h2>
+    <div class="cloud" id="cloud_oficialista"><canvas></canvas></div>
+  </div>
+  <div class="col-md-6">
+    <h2>Cobertura oposicion</h2>
+    <div class="cloud" id="cloud_oposicion"><canvas></canvas></div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block extrahead %}
+
+
+<link href='http://fonts.googleapis.com/css?family=Gochi+Hand' rel='stylesheet' type='text/css'>
+
+<style>
+div.cloud{
+  width:300px;
+  height:150px;
+}
+
+</style>
+
+<script>
+$(document).ready (function(){
+
+    function options(list){
+      return {
+              list: list,
+              fontFamily: 'sans',
+              backgroundColor: '#eee'
+            };
+    }
+
+    $.getJSON("/data/words/oficialistas.json", function(json) {
+        var canvas = $('div#cloud_oficialista > canvas');
+        WordCloud(canvas[0], options(json) );
+    });
+    $.getJSON("/data/words/oposicion.json", function(json) {
+        var canvas = $('div#cloud_oposicion > canvas');
+        WordCloud(canvas[0], options(json) );
+    });
+});
+
+
+</script>
+{% endblock %}
