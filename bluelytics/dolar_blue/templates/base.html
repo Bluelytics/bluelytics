@@ -33,6 +33,7 @@
     <!-- d3 + Rickshaw -->
     <script src="{% static 'js/d3.v3.min.js' %}"></script>
     <script src="{% static 'js/rickshaw.min.js' %}"></script>
+    <script src="{% static 'js/wordcloud2.js' %}"></script>
 
 
     <!-- Google Analytics -->
@@ -79,10 +80,15 @@
         <div class="collapse navbar-collapse" id="nav_bar_collapsed">
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <a href="/"><span class="glyphicon glyphicon-home"></span> Inicio</a>
+            <a href="/"><span class="glyphicon glyphicon-usd"></span> Cotizacion</a>
           </li>
           <li>
-            <a href="/graph"><span class="glyphicon glyphicon-stats"></span> Grafico</a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> Analisis <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/graph"><span class="glyphicon glyphicon-signal"></span> Evolucion</a></li>
+              <li><a href="/wordcloud"><span class="glyphicon glyphicon-filter"></span> Cobertura mediática</a></li>
+            </ul>
+            
           </li>
           <li>
             <a href="/json/last_price" target="_blank"><span class="glyphicon glyphicon-cloud-download"></span> JSON</a>

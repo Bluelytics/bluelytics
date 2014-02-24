@@ -7,10 +7,10 @@
 
 {% block content %}
 <ul id="source_select" class="nav nav-pills pull-right">
-  <li data-source="oficial" onclick="switch_source(this)"><a href="#">Oficial</a></li>
-  <li data-source="oficial+20" onclick="switch_source(this)"><a href="#">Oficial + 20%</a></li>
-  <li data-source="oficial+35" onclick="switch_source(this)"><a href="#">Oficial + 35%</a></li>
-  <li class="active" data-source="average" onclick="switch_source(this)"><a href="#">Promedio Blue</a></li>
+  <li data-source="oficial" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial</a></li>
+  <li data-source="oficial+20" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 20%</a></li>
+  <li data-source="oficial+35" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 35%</a></li>
+  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:void(0)">Promedio Blue</a></li>
 </ul>
 <br>
 
@@ -135,7 +135,7 @@ $.ready = function(){
   for (key in all_sources){
     var src = all_sources[key];
     if (src.name != 'oficial'){
-      var nel = $.parseHTML('<li data-source="'+src.name+'" onclick="switch_source(this)"><a href="#">'+src.description+'</a></li>');
+      var nel = $.parseHTML('<li data-source="'+src.name+'" onclick="switch_source(this)"><a href="javascript:void(0)">'+src.description+'</a></li>');
       src_sel.append(nel);
     }
   }

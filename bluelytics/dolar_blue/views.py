@@ -46,3 +46,6 @@ def blue_graph(request):
               'all_sources': json.dumps(all_sources) }
 
   return render(request, 'graph.html', context)
+
+def wordcloud(request):
+  return render(request, 'wordcloud.html', {})
