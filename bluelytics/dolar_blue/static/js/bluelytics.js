@@ -87,17 +87,21 @@ function switch_source(el){
   }
 }
 
+function average_sources(data){
+    only_blue = _.filter(data, function(s){return s.source != 'oficial';});
+
+    return {
+      'value_sell': only_blue.reduce(sumVar('value_sell'), 0)/only_blue.length,
+      'value_buy': only_blue.reduce(sumVar('value_buy'), 0)/only_blue.length,
+      'value_avg': only_blue.reduce(sumVar('value_avg'), 0)/only_blue.length,
+    };
+}
+
 function resolve_set_source(source){
   var resolved_source;
   multiplier=0;
   if(source == "average"){
-    onlyblue_ms = max_sources.filter(function(s){return s.source != 'oficial';});
-
-    resolved_source = {
-      'value_sell': onlyblue_ms.reduce(sumVar('value_sell'), 0)/onlyblue_ms.length,
-      'value_buy': onlyblue_ms.reduce(sumVar('value_buy'), 0)/onlyblue_ms.length,
-      'value_avg': onlyblue_ms.reduce(sumVar('value_avg'), 0)/onlyblue_ms.length,
-    };
+    resolved_source = average_sources(max_sources);
   }else{
     var splitName = source.split("+");
     if (splitName.length > 1){

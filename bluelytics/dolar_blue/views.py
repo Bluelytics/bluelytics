@@ -49,3 +49,13 @@ def blue_graph(request):
 
 def wordcloud(request):
   return render(request, 'wordcloud.html', {})
+
+
+def gap(request):
+  timezone.activate(pytz.timezone("America/Argentina/Buenos_Aires"))
+  max_sources = map(convDolar, maxSources())
+  all_sources = map(lambda x: {"name":x.source, "description":x.description},Source.objects.all())
+  context = { 'max_sources': json.dumps(max_sources, cls=DecimalEncoder),
+              'all_sources': json.dumps(all_sources) }
+
+  return render(request, 'gap.html', context)
