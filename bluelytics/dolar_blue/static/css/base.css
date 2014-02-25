@@ -56,3 +56,13 @@ h1.oficial{
 h1.blue{
   color: #229;
 }
+
+span.value{
+  font-size: 1.4em;
+  color: #800;
+}
+
+span.perc{
+  font-size: 1.7em;
+  color: #008;
+}
