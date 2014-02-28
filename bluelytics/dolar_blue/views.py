@@ -7,15 +7,8 @@ import json, pytz
 
 from dolar_blue.models import DolarBlue, Source
 from dolar_blue.utils import DecimalEncoder, arg
+from dolar_blue.calculations import maxSources, convDolar
 
-def maxSources():
-  all_sources = Source.objects.all()
-  maxSources = []
-  for src in all_sources:
-    record = DolarBlue.objects.filter(source__exact=src).order_by('-date').first()
-    maxSources.append(record)
-
-  return maxSources
 
 
 def index(request):
@@ -31,12 +24,6 @@ def json_lastprice(request):
   max_sources = map(convDolar, maxSources())
   return HttpResponse(max_sources, mimetype="application/json")
 
-def convDolar(e):
-  return {'date': e.date.astimezone(arg).strftime("%d/%m/%Y %H:%M:%S"),
-        'value_buy': e.value_buy,
-        'value_sell': e.value_sell,
-        'value_avg': e.value_avg,
-        'source': e.source.source}
 
 def blue_graph(request):
   all_prices = map(convDolar, DolarBlue.objects.all())

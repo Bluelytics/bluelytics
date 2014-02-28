@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load tz %}
+{% load staticfiles %}
 
 {% block title %}
   <title>bluelytics - Precio dólar blue</title>
@@ -44,6 +45,7 @@
 {% block extrahead %}
 
 
+<script src="{% static 'js/index.js' %}"></script>
 <script>
 var max_sources = {{ max_sources|safe }};
 var all_sources = {{ all_sources|safe }};

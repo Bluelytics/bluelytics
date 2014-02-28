@@ -51,4 +51,4 @@ class CurrencyValue(models.Model):
   value = models.DecimalField(decimal_places=6, max_digits=14)
 
   def __unicode__(self):
-    return self.curr.code + " " + date.strftime()
+    return self.curr.code + " " + self.date.strftime("%d/%m/%Y %H:%M:%S")

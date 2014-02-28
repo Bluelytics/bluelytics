@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load tz %}
+{% load staticfiles %}
+
+{% block title %}
+  <title>bluelytics - Precio dólar blue</title>
+{% endblock %}
+
+{% block content %}
+<ul id="source_select" class="nav nav-pills pull-right">
+  <li data-source="oficial" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial</a></li>
+  <li data-source="oficial+20" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 20%</a></li>
+  <li data-source="oficial+35" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 35%</a></li>
+  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:void(0)">Promedio Blue</a></li>
+</ul>
+<br>
+
+Moneda extranjera:
+<select id='currency_select'  class="selectpicker" data-live-search="true">
+  <option value="AUR">AAAA</option>
+  <option value="sas">absdb</option>
+  <option value="sad">fsaf</option>
+
+</select>
+
+<h1 class="blue">Calculadora Blue</h1>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div id="arsform" class="form-group">
+      <label class="control-label" for="currency_ars">Cantidad de pesos argentinos (ARS)</label>
+      <input id="currency_ars" type="number" value="1" min="1" class="form-control">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div id="extform" class="form-group">
+      <label class="control-label" for="currency_ext">Cantidad de moneda extranjera</label>
+      <input id="currency_ext" type="number" value="" min="1" class="form-control">
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block extrahead %}
+
+<script src="{% static 'js/calc.js' %}"></script>
+<script src="{% static 'js/vendor/bootstrap-select.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/bootstrap-select.min' %}">
+
+<script>
+var max_sources = {{ max_sources|safe }};
+var max_currencies = {{ max_currencies|safe }};
+var all_sources = {{ all_sources|safe }};
+
+var actual_usd;
+var actual_currency;
+
+$.ready = function(){
+  resolve_set_source('average');
+  $('#currency_select').selectpicker();
+};
+
+</script>
+
+{% endblock %}

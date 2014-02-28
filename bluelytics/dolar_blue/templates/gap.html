@@ -38,10 +38,6 @@
 var max_sources = {{ max_sources|safe }};
 var all_sources = {{ all_sources|safe }};
 
-function round_number(num, dec) {
-    return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
-}
-
 
 function gapCalc(id, oficial, blue, multiplier){
   var gap = blue - oficial;
