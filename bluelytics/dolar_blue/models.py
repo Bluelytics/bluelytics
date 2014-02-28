@@ -36,3 +36,19 @@ class DolarBlue(models.Model):
 
     def __unicode__(self):
       return self.source.source
+
+
+class Currency(models.Model):
+  code = models.CharField(max_length=3, unique=True)
+  name = models.CharField(max_length=150)
+
+  def __unicode__(self):
+    return self.code
+
+class CurrencyValue(models.Model):
+  curr = models.ForeignKey(Currency)
+  date = models.DateTimeField()
+  value = models.DecimalField(decimal_places=6, max_digits=14)
+
+  def __unicode__(self):
+    return self.curr.code + " " + date.strftime()
