@@ -18,7 +18,45 @@ function switch_source(el){
   if (resolve_set_source(source)){
     $('ul#source_select li.active').removeClass('active');
     $(el).addClass('active');
+    update(0);
   }
+}
+
+function update(how){
+  if(how == 0){
+    if(last_change == 0){
+      update_fromlocal();
+    }else{
+      update_fromext();
+    }
+  }else if(how == 1){
+    last_change = 0;
+    update(0);
+    return;
+  }else{
+    last_change = 1;
+    update(0);
+    return;
+  }
+
+  $('#calculation_blue > .from').text(actual_usd.toFixed(4));
+  $('#calculation_ext > .to').text(dict_currencies[actual_currency].toFixed(4) + ' ' + actual_currency);
+  $('#ext_code').text(actual_currency);
+}
+
+
+function update_fromlocal(){
+  var act_ars = $('#currency_ars').val();
+  var act_ext = (act_ars / actual_usd) * dict_currencies[actual_currency];
+
+  $('#currency_ext').val(act_ext.toFixed(4));
+}
+
+function update_fromext(){
+  var act_ext = $('#currency_ext').val();
+  var act_ars = (act_ext / dict_currencies[actual_currency]) * actual_usd;
+
+  $('#currency_ars').val(act_ars.toFixed(4));
 }
 
 

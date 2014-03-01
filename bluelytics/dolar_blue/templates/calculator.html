@@ -7,38 +7,54 @@
 {% endblock %}
 
 {% block content %}
-<ul id="source_select" class="nav nav-pills pull-right">
-  <li data-source="oficial" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial</a></li>
-  <li data-source="oficial+20" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 20%</a></li>
-  <li data-source="oficial+35" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 35%</a></li>
-  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:void(0)">Promedio Blue</a></li>
-</ul>
-<br>
 
-Moneda extranjera:
-<select id='currency_select'  class="selectpicker" data-live-search="true">
-  <option value="AUR">AAAA</option>
-  <option value="sas">absdb</option>
-  <option value="sad">fsaf</option>
-
-</select>
-
-<h1 class="blue">Calculadora Blue</h1>
 
 <div class="row">
-  <div class="col-md-4 col-md-offset-4">
-    <div id="arsform" class="form-group">
-      <label class="control-label" for="currency_ars">Cantidad de pesos argentinos (ARS)</label>
-      <input id="currency_ars" type="number" value="1" min="1" class="form-control">
-    </div>
+  <div class="col-md-12">
+    <ul id="source_select" class="nav nav-pills pull-right">
+      <li data-source="oficial" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial</a></li>
+      <li data-source="oficial+20" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 20%</a></li>
+      <li data-source="oficial+35" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 35%</a></li>
+      <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:void(0)">Promedio Blue</a></li>
+    </ul>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-4 col-md-offset-4">
-    <div id="extform" class="form-group">
-      <label class="control-label" for="currency_ext">Cantidad de moneda extranjera</label>
-      <input id="currency_ext" type="number" value="" min="1" class="form-control">
+  <div class="col-md-12">
+    <label for="currency_select">Moneda extranjera:</label>
+    <select id='currency_select'  class="selectpicker" data-live-search="true">
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <p id="calculation_blue"><span class="from"></span> ARS &#8776; 1 USD</p>
+  </div>
+  <div class="col-md-6">
+    <p id="calculation_ext">1 USD &#8776; <span class="to"></span></p>
+  </div>
+</div>
+
+<div class="row">
+  <h1 class="blue">Calculadora Blue</h1>
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div id="arsform" class="form-group">
+        <label class="control-label" for="currency_ars">Cantidad de pesos argentinos (ARS)</label>
+        <input id="currency_ars" type="number" value="1" min="1" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div id="extform" class="form-group">
+        <label class="control-label" for="currency_ext">Cantidad de moneda extranjera (<span id="ext_code"></span>)</label>
+        <input id="currency_ext" type="number" value="" min="1" class="form-control">
+      </div>
     </div>
   </div>
 </div>
@@ -51,19 +67,68 @@ Moneda extranjera:
 
 <script src="{% static 'js/calc.js' %}"></script>
 <script src="{% static 'js/vendor/bootstrap-select.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/bootstrap-select.min' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap-select.min.css' %}">
 
 <script>
 var max_sources = {{ max_sources|safe }};
 var max_currencies = {{ max_currencies|safe }};
+var dict_currencies = {};
 var all_sources = {{ all_sources|safe }};
 
 var actual_usd;
-var actual_currency;
+var actual_currency = 'USD';
+
+var last_change = 0;
+
 
 $.ready = function(){
   resolve_set_source('average');
-  $('#currency_select').selectpicker();
+
+
+  //Combo config
+  var $combo = $('#currency_select')
+  $.each(max_currencies, function(){
+    $combo.append($('<option></option>').attr('value', this.code).text(this.name + ' (' + this.code + ')'));
+    dict_currencies[this.code] = this.value;
+  });
+
+  $combo
+  .change(function(e) {
+    actual_currency = $( this ).val();
+
+    update(1);
+  });
+
+
+  //Listeners
+
+  var arsform = $('#arsform');
+  $('input#currency_ars')
+  .bind('mouseout keyup change', function() {
+    arsform.removeClass('has-error');
+    if ($.isNumeric(this.value)){
+      update(1);
+    }else{
+      arsform.addClass('has-error');
+    }
+  });
+
+  var extform = $('#extform');
+  $('input#currency_ext')
+  .bind('mouseout keyup change', function() {
+    extform.removeClass('has-error');
+    if ($.isNumeric(this.value)){
+      update(2);
+    }else{
+      extform.addClass('has-error');
+    }
+  });
+
+  // Default USD
+  $("#currency_select > option[value='USD']").prop('selected', true)
+  $combo.selectpicker();
+
+  update(1);
 };
 
 </script>

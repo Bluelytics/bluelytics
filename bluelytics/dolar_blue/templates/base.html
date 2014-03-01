@@ -84,17 +84,25 @@
           <li>
             <a href="{% url 'index' %}"><span class="glyphicon glyphicon-usd"></span> Cotizacion</a>
           </li>
+
+
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span> Herramientas <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'calculator' %}"><span class="glyphicon glyphicon-transfer"></span> Calculadora</a></li>
+              <li><a href="{% url 'json_lastprice' %}" target="_blank"><span class="glyphicon glyphicon-cloud-download"></span> JSON</a></li>
+            </ul>
+            
+          </li>
+
           <li>
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> Analisis <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'gap' %}"><span class="glyphicon glyphicon-resize-horizontal"></span> Brecha cambiaria</a></li>
               <li><a href="{% url 'blue_graph' %}"><span class="glyphicon glyphicon-signal"></span> Evolucion</a></li>
-              <li><a href="{% url 'wordcloud' %}"><span class="glyphicon glyphicon-filter"></span> Cobertura mediática</a></li>
+              <li><a href="{% url 'wordcloud' %}"><span class="glyphicon glyphicon-bullhorn"></span> Cobertura mediática</a></li>
             </ul>
             
-          </li>
-          <li>
-            <a href="{% url 'json_lastprice' %}" target="_blank"><span class="glyphicon glyphicon-cloud-download"></span> JSON</a>
           </li>
           <li>
             <a href="{{ request.path }}"><span class="glyphicon glyphicon-refresh"></span> Recargar</a>
