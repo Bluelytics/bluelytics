@@ -3,24 +3,57 @@
 Functions for main page
 */
 
+function define_changeclass(difference){
+  if(difference > 0){
+    return 'increment';
+  }else if (difference < 0){
+    return 'decrement';
+  } else{
+    return '';
+  }
+}
+
+function define_changeicon(difference){
+  if(difference > 0){
+    return 'arrow-up';
+  }else if (difference < 0){
+    return 'arrow-down';
+  } else{
+    return 'minus';
+  }
+}
+
 function set_source(sourceObj, multiplier){
   calcMultiplier = (100 + multiplier) / 100;
-  document.querySelector('div#valorCompra div.value').innerHTML =
-    (sourceObj.value_buy * calcMultiplier).toFixed(4);
-  document.querySelector('div#valorVenta div.value').innerHTML =
-    (sourceObj.value_sell * calcMultiplier).toFixed(4);
-  document.querySelector('div#valorIntermedio div.value').innerHTML =
-    (sourceObj.value_avg * calcMultiplier).toFixed(4);
 
-  if (sourceObj.date){
-    document.querySelector('div#last_update p.date').innerHTML = sourceObj.date;
+  today = sourceObj['today'];
+  yesterday = sourceObj['yesterday'];
+
+  var difference_buy = (today.value_buy - yesterday.value_buy) * calcMultiplier;
+  var difference_sell = (today.value_sell - yesterday.value_sell) * calcMultiplier;
+  var difference_avg = (today.value_avg - yesterday.value_avg) * calcMultiplier;
+
+  document.querySelector('div#valorCompra div.value').innerHTML =
+    (today.value_buy * calcMultiplier).toFixed(4)
+    + '  <span class="'+define_changeclass(difference_buy)+'">(<span class="glyphicon glyphicon-'+define_changeicon(difference_buy)+'"></span>'+Math.abs(difference_buy).toFixed(4)+')</span>';
+  
+  document.querySelector('div#valorVenta div.value').innerHTML =
+    (today.value_sell * calcMultiplier).toFixed(4)
+    + '  <span class="'+define_changeclass(difference_sell)+'">(<span class="glyphicon glyphicon-'+define_changeicon(difference_sell)+'"></span>'+Math.abs(difference_sell).toFixed(4)+')</span>';
+  
+  document.querySelector('div#valorIntermedio div.value').innerHTML =
+    (today.value_avg * calcMultiplier).toFixed(4)
+    + '  <span class="'+define_changeclass(difference_avg)+'">(<span class="glyphicon glyphicon-'+define_changeicon(difference_avg)+'"></span>'+Math.abs(difference_avg).toFixed(4)+')</span>';
+
+  if (today.date){
+    document.querySelector('div#last_update p.date').innerHTML = today.date;
     $('div#last_update').show();
   }else{
     $('div#last_update').hide();
   }
 
   var head = $('h1');
-  if (sourceObj.source == 'oficial'){
+  if (today.source == 'oficial'){
 
     head.text("Dólar oficial");
     if(head.hasClass('blue')){
@@ -52,7 +85,7 @@ function resolve_set_source(source){
   var resolved_source;
   multiplier=0;
   if(source == "average"){
-    resolved_source = average_sources(max_sources);
+    resolved_source = {'today':average_sources(max_sources), 'yesterday':average_sources(max_sources_yesterday)};
   }else{
     var splitName = source.split("+");
     if (splitName.length > 1){
@@ -61,10 +94,11 @@ function resolve_set_source(source){
     }
 
     var search = $.grep(max_sources, function(s){return s.source == source;});
+    var search_yesterday = $.grep(max_sources_yesterday, function(s){return s.source == source;});
 
     if (search.length == 0){return;}
     else
-      resolved_source = search[0];
+      resolved_source = {'today':search[0], 'yesterday':search_yesterday[0]};
   }
 
   return set_source(resolved_source, multiplier);

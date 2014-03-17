@@ -66,3 +66,10 @@ span.perc{
   font-size: 1.7em;
   color: #008;
 }
+
+span.decrement{
+  color:#c00;
+}
+span.increment{
+  color:#0c0;
+}
