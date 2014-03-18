@@ -5,13 +5,13 @@ import datetime
 from datetime import timedelta
 
 
-def maxSourcesYesterday(daysBefore):
+def maxSourcesYesterday():
   all_sources = Source.objects.all()
   maxSources = []
   for src in all_sources:
     last = DolarBlue.objects.filter(source__exact=src).order_by('-date').first()
 
-    dateCalc = last.date.replace(hour=0, minute=0, second=0)
+    dateCalc = last.date.replace(hour=3, minute=0, second=0)
 
     record = DolarBlue.objects.filter(source__exact=src, date__lt=dateCalc).order_by('-date').first()
     maxSources.append(record)
