@@ -41,10 +41,12 @@ def wordcloud(request):
 
 
 def gap(request):
+  all_prices = map(convDolar, DolarBlue.objects.all())
   timezone.activate(pytz.timezone("America/Argentina/Buenos_Aires"))
   max_sources = map(convDolar, maxSources())
   all_sources = map(lambda x: {"name":x.source, "description":x.description},Source.objects.all())
   context = { 'max_sources': json.dumps(max_sources, cls=DecimalEncoder),
-              'all_sources': json.dumps(all_sources) }
+              'all_sources': json.dumps(all_sources),
+              'all_prices': json.dumps(all_prices, cls=DecimalEncoder) }
 
   return render(request, 'gap.html', context)

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load tz %}
+{% load static %}
 
 {% block title %}
   <title>bluelytics - Brecha dólar blue</title>
@@ -28,52 +29,31 @@
 <h3> Turista (+35%) vs Blue </h3>
 <span id="gap_3"><span class="value"></span> <span class="perc"></span></span>
 
+
+<h2>Evolucion brecha cambiaria</h2>
+
+<div id="dailychart_gap" class="chart_block">
+</div>
+
 {% endblock %}
 
 
 {% block extrahead %}
 
 
+<script src="{% static 'js/gap.js' %}"></script>
+
 <script>
 var max_sources = {{ max_sources|safe }};
-var all_sources = {{ all_sources|safe }};
+var sourceData = {{ all_sources|safe }};
+var blueData = {{ all_prices|safe }};
 
 
-function gapCalc(id, oficial, blue, multiplier){
-  var gap = blue - oficial;
-  var perc_gap = (gap/oficial) * 100;
-  $('span#'+id+' > span.value').text("AR$ " + (gap*multiplier).toFixed(2));
-  $('span#'+id+' > span.perc').text("(" +perc_gap.toFixed(2)+ "%)");
-}
-
-function adjustGap(value){
-  gapCalc('gap_1', oficial_value_avg, blue_value_avg, value);
-  gapCalc('gap_2', oficial_mas20_avg, blue_value_avg, value);
-  gapCalc('gap_3', oficial_mas35_avg, blue_value_avg, value);
-}
 
 $.ready = function(){
-  onlyoficial = max_sources.filter(function(s){return s.source == 'oficial';})[0];
-  oficial_value_avg = onlyoficial.value_avg;
 
-  avgs = average_sources(max_sources);
-  blue_value_avg = avgs.value_avg;
+initializeGap();
 
-  oficial_mas20_avg = oficial_value_avg * 1.20;
-  oficial_mas35_avg = oficial_value_avg * 1.35;
-
-  var baseform = $('#baseform');
-  $('input#basecurrency')
-  .bind('mouseout keyup change', function() {
-    baseform.removeClass('has-error');
-    if ($.isNumeric(this.value)){
-      adjustGap(this.value);
-    }else{
-      baseform.addClass('has-error');
-    }
-  });
-
-  adjustGap(1);
 };
 
 </script>
