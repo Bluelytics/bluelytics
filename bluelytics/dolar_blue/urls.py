@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^wordcloud$', views.wordcloud, name='wordcloud'),
     url(r'^gap$', views.gap, name='gap'),
     url(r'^calc$', calculator_view.calculator, name='calculator'),
+    url(r'^json$', views.json_index, name='json'),
     url(r'^json/last_price$', views.json_lastprice, name='json_lastprice')
 )

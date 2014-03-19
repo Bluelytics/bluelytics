@@ -22,6 +22,9 @@ def index(request):
 
   return render(request, 'index.html', context)
 
+def json_index(request):
+  return render(request, 'json.html', {})
+
 def json_lastprice(request):
   max_sources = map(convDolar, maxSources())
   return HttpResponse(max_sources, mimetype="application/json")
