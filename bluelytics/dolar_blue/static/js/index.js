@@ -47,9 +47,9 @@ function set_source(sourceObj, multiplier){
 
   if (today.date){
     document.querySelector('div#last_update p.date').innerHTML = today.date;
-    $('div#last_update').show();
+    $('div#last_update').css('visibility','');
   }else{
-    $('div#last_update').hide();
+    $('div#last_update').css('visibility','hidden');
   }
 
   var head = $('h1');
