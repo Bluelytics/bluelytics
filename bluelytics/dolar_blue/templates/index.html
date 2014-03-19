@@ -7,14 +7,6 @@
 {% endblock %}
 
 {% block content %}
-<ul id="source_select" class="nav nav-pills pull-right">
-  <li data-source="oficial" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial</a></li>
-  <li data-source="oficial+20" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 20%</a></li>
-  <li data-source="oficial+35" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 35%</a></li>
-  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:void(0)">Promedio Blue</a></li>
-</ul>
-<br>
-
 <h1 class="blue">Dólar blue</h1>
 <h2>Valor</h2>
 <div class="row">
@@ -38,6 +30,16 @@
   <p class="date_title">Ultima actualización:</p>
   <p class="date"></p>
 </div>
+
+
+<ul id="source_select" class="nav nav-pills pull-right">
+  <li data-source="oficial" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial</a></li>
+  <li data-source="oficial+20" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 20%</a></li>
+  <li data-source="oficial+35" onclick="switch_source(this)"><a href="javascript:void(0)">Oficial + 35%</a></li>
+  <li class="active" data-source="average" onclick="switch_source(this)"><a href="javascript:void(0)">Promedio Blue</a></li>
+</ul>
+<br>
+
 
 {% endblock %}
 
