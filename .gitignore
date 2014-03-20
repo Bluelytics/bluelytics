@@ -5,3 +5,4 @@ local/
 *.pyc
 casperjs/
 local_settings.py
+buffer_apikeys.py
