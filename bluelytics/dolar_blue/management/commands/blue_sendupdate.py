@@ -85,28 +85,26 @@ class Command(BaseCommand):
         send_request_twitter("[Oficial] Venta a %s, Compra a %s, Intermedio a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
         % (self.dolar['oficial']['sell'], self.dolar['oficial']['buy'], self.dolar['oficial']['avg']) )
 
-        send_request_twitter("[Oficial+20%%/Ahorro] Venta a %s, Compra a %s, Intermedio a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
-        % (self.dolar['ahorro']['sell'], self.dolar['ahorro']['buy'], self.dolar['ahorro']['avg']) )
+        send_request_twitter("[Oficial+20%%/Ahorro] a %s, [Oficial+35%%/Turismo] a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
+        % (self.dolar['ahorro']['sell'], self.dolar['turismo']['sell']) )
 
-        send_request_twitter("[Oficial+35%%/Turismo] Venta a %s, Compra a %s, Intermedio a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
-        % (self.dolar['turismo']['sell'], self.dolar['turismo']['buy'], self.dolar['turismo']['avg']) )
 
 
     def facebook_update(self):
         send_request_facebook("\
-    Te informamos los valores del dia!\
+    Te informamos los valores del dia!\n\
 [Blue] Venta a %s, Compra a %s, Intermedio a %s\n\
 [Oficial] Venta a %s, Compra a %s, Intermedio a %s\n\
-[Oficial+20%%/Ahorro] Venta a %s, Compra a %s, Intermedio a %s\n\
-[Oficial+35%%/Turismo] Venta a %s, Compra a %s, Intermedio a %s\n\
+[Oficial+20%%/Ahorro] Venta a %s\n\
+[Oficial+35%%/Turismo] Venta a %s\n\n\
 Para mas informacion y actualizaciones periodicas visita nuestro sitio web!\n\
 http://goo.gl/DUj1XN\
 " % \
         ( \
         self.dolar['blue']['sell'], self.dolar['blue']['buy'], self.dolar['blue']['avg'],\
         self.dolar['oficial']['sell'], self.dolar['oficial']['buy'], self.dolar['oficial']['avg'],\
-        self.dolar['ahorro']['sell'], self.dolar['ahorro']['buy'], self.dolar['ahorro']['avg'],\
-        self.dolar['turismo']['sell'], self.dolar['turismo']['buy'], self.dolar['turismo']['avg'],\
+        self.dolar['ahorro']['sell'],\
+        self.dolar['turismo']['sell']\
         ))
 
     def handle(self, *args, **options):
