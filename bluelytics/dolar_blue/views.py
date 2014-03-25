@@ -27,7 +27,7 @@ def json_index(request):
 
 def json_lastprice(request):
   max_sources = map(convDolar, maxSources())
-  return HttpResponse(max_sources, mimetype="application/json")
+  return HttpResponse(json.dumps(max_sources, cls=DecimalEncoder), mimetype="application/json")
 
 
 def blue_graph(request):
