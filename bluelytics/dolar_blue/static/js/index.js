@@ -46,7 +46,7 @@ function set_source(sourceObj, multiplier){
     + '  <span class="'+define_changeclass(difference_avg)+'">(<span class="glyphicon glyphicon-'+define_changeicon(difference_avg)+'"></span>'+Math.abs(difference_avg).toFixed(4)+')</span>';
 
   if (today.date){
-    document.querySelector('div#last_update p.date').innerHTML = today.date;
+    document.querySelector('div#last_update p.date').innerHTML = DATE_FORMAT(new Date(today.date));
     $('div#last_update').css('visibility','');
   }else{
     $('div#last_update').css('visibility','hidden');
