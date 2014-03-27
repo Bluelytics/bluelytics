@@ -79,30 +79,23 @@ class Command(BaseCommand):
 
 
     def twitter_update(self):     
-        send_request_twitter("[Blue] Venta a %s, Compra a %s, Intermedio a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
-        % (self.dolar['blue']['sell'], self.dolar['blue']['buy'], self.dolar['blue']['avg']) )
-
-        send_request_twitter("[Oficial] Venta a %s, Compra a %s, Intermedio a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
-        % (self.dolar['oficial']['sell'], self.dolar['oficial']['buy'], self.dolar['oficial']['avg']) )
-
-        send_request_twitter("[Oficial+20%%/Ahorro] a %s, [Oficial+35%%/Turismo] a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
-        % (self.dolar['ahorro']['sell'], self.dolar['turismo']['sell']) )
-
+        send_request_twitter("Blue a %s, Oficial a %s, Ahorro a %s y Tarjeta a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
+        % (self.dolar['blue']['sell'], self.dolar['oficial']['sell'], self.dolar['ahorro']['sell'], self.dolar['turismo']['sell']) )
 
 
     def facebook_update(self):
         send_request_facebook("\
-    Te informamos los valores del dia!\n\
-[Blue] Venta a %s, Compra a %s, Intermedio a %s\n\
-[Oficial] Venta a %s, Compra a %s, Intermedio a %s\n\
-[Oficial+20%%/Ahorro] Venta a %s\n\
-[Oficial+35%%/Turismo] Venta a %s\n\n\
-Para mas informacion y actualizaciones periodicas visita nuestro sitio web!\n\
+Te informamos los valores de venta del dia!\n\
+Blue a %s\n\
+Oficial a %s\n\
+Ahorro a %s\n\
+Turista a %s\n\n\
+Para mas informacion y actualizaciones de ultimo momento visita nuestro sitio web!\n\
 http://goo.gl/DUj1XN\
 " % \
         ( \
-        self.dolar['blue']['sell'], self.dolar['blue']['buy'], self.dolar['blue']['avg'],\
-        self.dolar['oficial']['sell'], self.dolar['oficial']['buy'], self.dolar['oficial']['avg'],\
+        self.dolar['blue']['sell'],\
+        self.dolar['oficial']['sell'],\
         self.dolar['ahorro']['sell'],\
         self.dolar['turismo']['sell']\
         ))
