@@ -142,7 +142,7 @@ function initializeGap(){
 
   /* Gap Graph */
   var transfBlueData = _.chain(blueData).map(function(b){
-    var tmp_date = DATE_FORMAT.parse(b.date);
+    var tmp_date = new Date(b.date);
     b.epoch = tmp_date.getTime()/1000;
     b.datepart = DATEPART_FORMAT(tmp_date);
     return b;
