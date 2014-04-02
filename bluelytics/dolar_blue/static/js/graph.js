@@ -103,7 +103,6 @@ Functions for graph
 function graph_set_variable(variable){
   $('.chart_block').addClass('hidden');
   $('#dailychart_'+variable).removeClass('hidden');
-  $('#hourlychart_'+variable).removeClass('hidden');
 }
 
 function graph_switch_variable(el){
@@ -147,20 +146,8 @@ function prepareGraphs(){
     return b;
   }).value();
 
-  var bySourceDate = _.groupBy(transfBlueData, function(a){return a.source+a.datepart;});
-
-  var dailyBlueData = _.map(bySourceDate, function(d){
-    return _.max(d, function(a){return a.epoch;});
-  });
-
 
   var dailyGraphReady = {
-    'value_sell':transformData(dailyBlueData, 'value_sell'),
-    'value_avg':transformData(dailyBlueData, 'value_avg'),
-    'value_buy':transformData(dailyBlueData, 'value_buy')
-  };
-
-  var hourlyGraphReady = {
     'value_sell':transformData(transfBlueData, 'value_sell'),
     'value_avg':transformData(transfBlueData, 'value_avg'),
     'value_buy':transformData(transfBlueData, 'value_buy')
@@ -169,9 +156,6 @@ function prepareGraphs(){
   var dailyGraph_sell = generateGraph("dailychart_sell", dailyGraphReady['value_sell']);
   var dailyGraph_avg = generateGraph("dailychart_avg", dailyGraphReady['value_avg']);
   var dailyGraph_buy = generateGraph("dailychart_buy", dailyGraphReady['value_buy']);
-  var hourlyGraph_sell = generateGraph("hourlychart_sell", hourlyGraphReady['value_sell']);
-  var hourlyGraph_avg = generateGraph("hourlychart_avg", hourlyGraphReady['value_avg']);
-  var hourlyGraph_buy = generateGraph("hourlychart_buy", hourlyGraphReady['value_buy']);
-
+  
   graph_set_variable('avg');
 }

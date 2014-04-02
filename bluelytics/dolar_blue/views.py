@@ -9,6 +9,18 @@ from dolar_blue.models import DolarBlue, Source
 from dolar_blue.utils import DecimalEncoder, arg
 from dolar_blue.calculations import maxSources, maxSourcesYesterday, convDolar
 
+def last_price_each_day():
+  return DolarBlue.objects.raw('\
+  select *\
+  from dolar_blue_dolarblue db\
+  inner join\
+    (select source_id, max(date) as date, date(date) as datepart\
+      from dolar_blue_dolarblue\
+      group by source_id, date(date)\
+    ) dbj\
+  on db.source_id = dbj.source_id and db.date = dbj.date;\
+  ')
+
 
 
 def index(request):
@@ -31,7 +43,7 @@ def json_lastprice(request):
 
 
 def blue_graph(request):
-  all_prices = map(convDolar, DolarBlue.objects.all())
+  all_prices = map(convDolar, last_price_each_day())
   all_sources = map(lambda x: {"name":x.source, "description":x.description},Source.objects.all())
 
   context = { 'all_prices': json.dumps(all_prices, cls=DecimalEncoder),
@@ -44,7 +56,7 @@ def wordcloud(request):
 
 
 def gap(request):
-  all_prices = map(convDolar, DolarBlue.objects.all())
+  all_prices = map(convDolar, last_price_each_day())
   timezone.activate(pytz.timezone("America/Argentina/Buenos_Aires"))
   max_sources = map(convDolar, maxSources())
   all_sources = map(lambda x: {"name":x.source, "description":x.description},Source.objects.all())
