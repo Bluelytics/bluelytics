@@ -4,9 +4,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta name="description" content="">
     <meta name="author" content="">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/mobile-icon.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/mobile-icon-114.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/mobile-icon-72.png' %}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'img/mobile-icon-144.png' %}" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
 
     {% block title %}
       <title>bluelytics</title>
