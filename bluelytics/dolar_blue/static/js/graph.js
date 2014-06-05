@@ -42,7 +42,7 @@ Functions for graph
         element: document.querySelector(chart_id + " > div.chart_container > div.chart"), 
         renderer: 'line',
         series: inputData,
-        min:7
+        min:3
     });
 
 
