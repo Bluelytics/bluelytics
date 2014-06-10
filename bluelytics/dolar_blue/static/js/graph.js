@@ -41,8 +41,7 @@ Functions for graph
     var graph = new Rickshaw.Graph( {
         element: document.querySelector(chart_id + " > div.chart_container > div.chart"), 
         renderer: 'line',
-        series: inputData,
-        min:3
+        series: inputData
     });
 
 

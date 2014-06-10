@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load tz %}
+
+{% block title %}
+  <title>bluelytics - Cobertura mediática</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>Predicción del Dolar Blue</h1>
+<h2>(Venta)</h2>
+
+<table class="table" id="table_forecast">
+<thead>
+  <tr>
+  <th>Mes</th>
+  <th>Valor minimo predicho</th>
+  <th>Valor predicho</th>
+  <th>Valor maximo predicho</th>
+  </tr>
+</thead>
+<tbody></tbody>
+</table>
+
+{% endblock %}
+
+
+{% block extrahead %}
+
+<style>
+  td.mean{
+    font-weight: bold;
+  }
+
+</style>
+
+
+<script src="{% static 'js/forecast.js' %}"></script>
+
+<script>
+
+
+$(document).ready (function(){
+
+  function fill_table(table, dates, values){
+
+    var add_html = '';
+
+    for(var i=0; i < dates.length; i++){
+      add_html +=
+        '<tr><td>'
+          + dates[i] +
+        '</td><td class="min">'
+          + values.lower_80[i] +
+        '</td><td class="mean">'
+          + values.mean[i] +
+        '</td><td class="max">'
+          + values.upper_80[i] +
+
+        '</td>';
+    }
+    table.append(add_html);
+  }
+
+
+
+  var dates_forecasted;
+  var dates_history;
+  var values_forecasted;
+  var values_history;
+
+    $.getJSON("/data/forecast/json_dates_forecasted.json", function(json) {
+      dates_forecasted = json;
+      $.getJSON("/data/forecast/json_dates_history.json", function(json) {
+        dates_history = json;
+        $.getJSON("/data/forecast/json_forecasted.json", function(json) {
+          values_forecasted = json;
+          $.getJSON("/data/forecast/json_history.json", function(json) {
+            values_history = json;
+            console.log(dates_forecasted);
+            console.log(dates_history);
+            console.log(values_forecasted);
+            console.log(values_history);
+
+            fill_table($('table#table_forecast > tbody'),dates_forecasted, values_forecasted);
+          });
+        });
+      });
+    });
+});
+
+
+</script>
+{% endblock %}

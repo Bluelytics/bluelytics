@@ -55,6 +55,9 @@ def blue_graph(request):
 def wordcloud(request):
   return render(request, 'wordcloud.html', {})
 
+def forecast(request):
+  return render(request, 'forecast.html', {})
+
 
 def gap(request):
   all_prices = map(convDolar, last_price_each_day())
