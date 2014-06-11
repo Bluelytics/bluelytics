@@ -91,7 +91,7 @@
     {
       data: seriesForecastMax,
       name: 'Predicho maximo',
-      color: '#afeeee'
+      color: '#44eeee'
     }
     ];
 
