@@ -11,6 +11,7 @@ Functions for graph
     for (key in sourceData){
       var source = sourceData[key].name;
       var sourceDesc = sourceData[key].description;
+      var sourceColor = sourceData[key].color;
       srcd = {
         data: 
           inputData
@@ -18,7 +19,7 @@ Functions for graph
             .map(function(d){return {x: d.epoch, y:+(d[variable].toFixed(4))};})
         ,
         name: sourceDesc,
-        color: palette.color()
+        color: sourceColor
       }
 
       graphData.push(srcd);
@@ -115,28 +116,53 @@ function graph_switch_variable(el){
 }
 
 function prepareGraphs(){
-    var add_20perc = _.chain(blueData)
-    .filter(function(e){return e.source == "oficial";})
-    .map(function(e){
-              return addxPerc(e, 20);
-            })
-    .value()
-  ;
+  
 
-  var add_35perc = _.chain(blueData)
-    .filter(function(e){return e.source == "oficial";})
-    .map(function(e){
-              return addxPerc(e, 35);
-            })
-    .value()
-  ;
+  var onlyOficial = _.filter(blueData, function(d){ return d.source == 'oficial' });
 
-  blueFixed = jQuery.merge(jQuery.merge(add_20perc, add_35perc), blueData);
+  var add_20perc = _.map(onlyOficial, function(e){
+    return addxPerc(e, 20);
+  });
 
-  var label_20perc = {"name": "oficial_mas20", "description": "Oficial + 20%"};
-  var label_35perc = {"name": "oficial_mas35", "description": "Oficial + 35%"};
+  var add_35perc = _.map(onlyOficial, function(e){
+    return addxPerc(e, 35);
+  });
+
+  var onlyBlue = _.filter(blueData, function(d){ return d.source != 'oficial' });
+  
+  var avgBlue = _.chain(onlyBlue).groupBy(function(a){
+    var tmp_date = new Date(a.date);
+    return DATEPART_FORMAT(tmp_date);
+  }).map(function(a){
+    var sum_buy = _.reduce(a, function(memo, sum){
+      return memo + sum.value_buy;
+    }, 0);
+    var sum_avg = _.reduce(a, function(memo, sum){
+      return memo + sum.value_avg;
+    }, 0);
+    var sum_sell = _.reduce(a, function(memo, sum){
+      return memo + sum.value_sell;
+    }, 0);
+
+    var base = a[0];
+    base['source'] = 'blue';
+    base['value_buy'] = sum_buy / a.length;
+    base['value_avg'] = sum_avg / a.length;
+    base['value_sell'] = sum_sell / a.length;
+    return base;
+  }).value();
+
+  blueFixed = jQuery.merge(jQuery.merge(jQuery.merge(add_20perc, add_35perc), onlyOficial), avgBlue);
+
+  sourceData = [];
+  var label_oficial = {"name": "oficial", "description": "Oficial", "color": '#00cc00'};
+  var label_20perc = {"name": "oficial_mas20", "description": "Oficial + 20%", "color": '#00cccc'};
+  var label_35perc = {"name": "oficial_mas35", "description": "Oficial + 35%", "color": '#cccc00'};
+  var label_blue = {"name": "blue", "description": "Blue", "color": '#0000cc'};
+  sourceData.push(label_oficial);
   sourceData.push(label_20perc);
   sourceData.push(label_35perc);
+  sourceData.push(label_blue);
 
   var transfBlueData = _.chain(blueFixed).map(function(b){
     var tmp_date = new Date(b.date);
@@ -151,6 +177,8 @@ function prepareGraphs(){
     'value_avg':transformData(transfBlueData, 'value_avg'),
     'value_buy':transformData(transfBlueData, 'value_buy')
   };
+
+  console.log(dailyGraphReady['value_sell'])
 
   var dailyGraph_sell = generateGraph("dailychart_sell", dailyGraphReady['value_sell']);
   var dailyGraph_avg = generateGraph("dailychart_avg", dailyGraphReady['value_avg']);

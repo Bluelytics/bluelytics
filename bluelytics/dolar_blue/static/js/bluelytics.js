@@ -6,6 +6,9 @@ Global functions
 
 var DATE_FORMAT = d3.time.format("%d/%m/%Y %H:%M:%S");
 var DATEPART_FORMAT = d3.time.format("%d/%m/%Y");
+var MONTH_FORMAT = d3.time.format("%m/%Y");
+
+
 
 
 /*

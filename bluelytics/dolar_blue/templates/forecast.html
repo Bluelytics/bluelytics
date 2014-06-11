@@ -9,8 +9,13 @@
 {% block content %}
 
 <h1>Predicción del Dolar Blue</h1>
-<h2>(Venta)</h2>
+<em>(Todos los valores indicados a continuacion se refieren al valor de venta)</em>
 
+<h2>Grafico</h2>
+<div id="forecast_chart" class="chart_block">
+</div>
+
+<h2>Tabla de valores</h2>
 <table class="table" id="table_forecast">
 <thead>
   <tr>
@@ -23,12 +28,35 @@
 <tbody></tbody>
 </table>
 
+
 {% endblock %}
 
 
 {% block extrahead %}
 
 <style>
+
+
+.rickshaw_graph .detail .x_label { display: none }
+.rickshaw_graph .detail .item { line-height: 1.4; padding: 0.5em }
+.detail_swatch { float: right; display: inline-block; width: 10px; height: 10px; margin: 0 4px 0 0 }
+.rickshaw_graph .detail .date {  }
+.rickshaw_graph .detail .x_value { font-weight: bold;  }
+
+
+.chart_container{
+  display:inline-block;
+  position: relative;
+}
+
+.chart_container {
+  width:70%;
+}
+
+.hidden{
+  display:none;
+}
+
   td.mean{
     font-weight: bold;
   }
@@ -43,51 +71,11 @@
 
 $(document).ready (function(){
 
-  function fill_table(table, dates, values){
 
-    var add_html = '';
-
-    for(var i=0; i < dates.length; i++){
-      add_html +=
-        '<tr><td>'
-          + dates[i] +
-        '</td><td class="min">'
-          + values.lower_80[i] +
-        '</td><td class="mean">'
-          + values.mean[i] +
-        '</td><td class="max">'
-          + values.upper_80[i] +
-
-        '</td>';
-    }
-    table.append(add_html);
-  }
+  obtainDataForecast();
 
 
 
-  var dates_forecasted;
-  var dates_history;
-  var values_forecasted;
-  var values_history;
-
-    $.getJSON("/data/forecast/json_dates_forecasted.json", function(json) {
-      dates_forecasted = json;
-      $.getJSON("/data/forecast/json_dates_history.json", function(json) {
-        dates_history = json;
-        $.getJSON("/data/forecast/json_forecasted.json", function(json) {
-          values_forecasted = json;
-          $.getJSON("/data/forecast/json_history.json", function(json) {
-            values_history = json;
-            console.log(dates_forecasted);
-            console.log(dates_history);
-            console.log(values_forecasted);
-            console.log(values_history);
-
-            fill_table($('table#table_forecast > tbody'),dates_forecasted, values_forecasted);
-          });
-        });
-      });
-    });
 });
 
 
