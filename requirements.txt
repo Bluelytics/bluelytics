@@ -1,6 +1,5 @@
 Django==1.6
 argparse==1.2.1
-distribute==0.6.24
 psycopg2==2.5.2
 pytz==2013.9
 requests==2.2.1

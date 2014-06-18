@@ -5,7 +5,7 @@ from dolar_blue.models import DolarBlue, Source
 from dolar_blue.calculations import maxSources, convDolar
 
 from decimal import Decimal
-import sys, datetime
+import sys, subprocess, os, datetime
 import requests
 
 
@@ -79,26 +79,24 @@ class Command(BaseCommand):
 
 
     def twitter_update(self):     
-        send_request_twitter("Blue a %s, Oficial a %s, Ahorro a %s y Tarjeta a %s - Visita el sitio para + info! http://goo.gl/DUj1XN" \
-        % (self.dolar['blue']['sell'], self.dolar['oficial']['sell'], self.dolar['ahorro']['sell'], self.dolar['turismo']['sell']) )
-
+        pass
 
     def facebook_update(self):
-        send_request_facebook("\
-Te informamos los valores de venta del dia!\n\
-Blue a %s\n\
-Oficial a %s\n\
-Ahorro a %s\n\
-Turista a %s\n\n\
-Para mas informacion y actualizaciones de ultimo momento visita nuestro sitio web!\n\
-http://goo.gl/DUj1XN\
-" % \
-        ( \
-        self.dolar['blue']['sell'],\
-        self.dolar['oficial']['sell'],\
-        self.dolar['ahorro']['sell'],\
-        self.dolar['turismo']['sell']\
-        ))
+        pass
+
+    def generate_img(self):
+        PATH_SCRIPT_IMG = '/home/sicarul/Dev/blueimg/'
+        
+        subprocess.call([os.path.join(PATH_SCRIPT_IMG, 'gen_image.sh'),
+            str(self.dolar['blue']['buy']),
+            str(self.dolar['blue']['sell']),
+            str(self.dolar['oficial']['buy']),
+            str(self.dolar['oficial']['sell']),
+            str(self.dolar['ahorro']['buy']),
+            str(self.dolar['ahorro']['sell']),
+            str(self.dolar['turismo']['buy']),
+            str(self.dolar['turismo']['sell']),
+        ])
 
     def handle(self, *args, **options):
         if len(args) != 1:
@@ -106,6 +104,7 @@ http://goo.gl/DUj1XN\
         
         try:
             self.prepare_data()
+            self.generate_img()
             social_network = args[0]
             if(social_network == 'twitter' or social_network == 'all'):
                 self.twitter_update()
@@ -114,6 +113,6 @@ http://goo.gl/DUj1XN\
             
 
         except Exception:
-            self.stdout.write('Error saving new dollar values')
+            self.stdout.write('Error updating social network')
             print "Error:", sys.exc_info()[0]
             raise
