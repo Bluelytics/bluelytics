@@ -83,10 +83,10 @@ class Command(BaseCommand):
 
 
     def twitter_update(self):     
-        send_request_twitter("Blue a %s, visita http://www.bluelytics.com.ar !")
+        send_request_twitter("Blue a %s, visita http://www.bluelytics.com.ar !" % self.dolar['blue']['venta'])
 
     def facebook_update(self):
-        send_request_facebook("Blue a %s\n\nVisita http://www.bluelytics.com.ar para la ultima informacion!")
+        send_request_facebook("Blue a %s\n\nVisita http://www.bluelytics.com.ar para la ultima informacion!" % self.dolar['blue']['venta'])
 
     def generate_img(self):
         PATH_SCRIPT_IMG = '/home/sicarul/blueimg/'
