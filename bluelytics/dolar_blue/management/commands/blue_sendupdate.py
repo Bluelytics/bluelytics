@@ -19,7 +19,9 @@ def send_request_twitter(msg):
         'profile_ids[]': '532affdc1d36e0037832ea01',
         'shorten': 'false',
         'top': 'true',
-        'now': 'true'
+        'now': 'true',
+        'media[photo]': 'http://bluelytics.com.ar/social_img/twitter.png',
+        'media[thumbnail]': 'http://bluelytics.com.ar/social_img/twitter.png'
     }
     r = requests.post("https://api.bufferapp.com/1/updates/create.json", data=payload)
     
@@ -33,7 +35,9 @@ def send_request_facebook(msg):
         'profile_ids[]': '532afee31d36e0eb7732ea02',
         'shorten': 'false',
         'top': 'true',
-        'now': 'true'
+        'now': 'true',
+        'media[photo]': 'http://bluelytics.com.ar/social_img/facebook.png',
+        'media[thumbnail]': 'http://bluelytics.com.ar/social_img/facebook.png'
     }
     r = requests.post("https://api.bufferapp.com/1/updates/create.json", data=payload)
     
@@ -79,10 +83,10 @@ class Command(BaseCommand):
 
 
     def twitter_update(self):     
-        pass
+        send_request_twitter("Blue a %s, visita http://www.bluelytics.com.ar !")
 
     def facebook_update(self):
-        pass
+        send_request_facebook("Blue a %s\n\nVisita http://www.bluelytics.com.ar para la ultima informacion!")
 
     def generate_img(self):
         PATH_SCRIPT_IMG = '/home/sicarul/Dev/blueimg/'
