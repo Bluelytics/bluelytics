@@ -89,7 +89,7 @@ class Command(BaseCommand):
         send_request_facebook("Blue a %s\n\nVisita http://www.bluelytics.com.ar para la ultima informacion!")
 
     def generate_img(self):
-        PATH_SCRIPT_IMG = '/home/sicarul/Dev/blueimg/'
+        PATH_SCRIPT_IMG = '/home/sicarul/blueimg/'
         
         subprocess.call([os.path.join(PATH_SCRIPT_IMG, 'gen_image.sh'),
             str(self.dolar['blue']['buy']),
