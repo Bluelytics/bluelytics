@@ -1,10 +1,12 @@
 from django.http import HttpResponse
 import json, datetime
 
+from operator import itemgetter
 from decimal import Decimal 
 
 from dolar_blue.models import DolarBlue, Source
 from dolar_blue.utils import DecimalEncoder, arg
+from dolar_blue.calculations import maxCurrencies, convCurr
 
 def api_dolar(d):
   return {'date': d.date.astimezone(arg).isoformat(),
@@ -53,7 +55,7 @@ def avgBlue(input):
         'compra_ayer': c_a/i,
         'venta_ayer': v_a/i,
         'name': 'blue',
-        'long_name': 'Bluelytics'
+        'long_name': 'Dolar Blue'
           }
 
 def addOficial(input, perc, newname):
@@ -84,3 +86,9 @@ def lastprice(request):
   output.append(addOficial(allPrices, 35, 'Oficial Tarjeta'))
 
   return HttpResponse(json.dumps(output, cls=DecimalEncoder), mimetype="application/json")
+
+def all_currencies(request):
+  max_currencies = map(convCurr, maxCurrencies())
+  max_currencies.sort(key=itemgetter('code'))
+
+  return HttpResponse(json.dumps(max_currencies, cls=DecimalEncoder), mimetype="application/json")
