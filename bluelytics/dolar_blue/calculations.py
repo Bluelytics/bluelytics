@@ -27,6 +27,7 @@ def maxSources():
 
   return maxSources
 
+
 def convDolar(e):
   return {'date': e.date.astimezone(arg).isoformat(),
         'value_buy': e.value_buy,
