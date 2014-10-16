@@ -38,16 +38,19 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dolar_blue'
+    'dolar_blue',
+    'corsheaders'
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 )
 
 ROOT_URLCONF = 'bluelytics.urls'
@@ -67,6 +70,11 @@ DATABASES = {
         'PASSWORD': 'postgres'
     }
 }
+
+CORS_ORIGIN_WHITELIST = (
+    'bluelytics.com.ar',
+    'www.bluelytics.com.ar'
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
