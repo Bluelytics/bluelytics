@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'^json/last_price$', views.json_lastprice, name='json_lastprice'),
     
     url(r'^api/last_price$', api.lastprice, name='api_lastprice'),
-    url(r'^api/all_currencies$', api.all_currencies, name='api_all_currencies')
+    url(r'^api/all_currencies$', api.all_currencies, name='api_all_currencies'),
+    url(r'^api/graph_data$', api.graph_data, name='api_graph_data')
 )
