@@ -6,18 +6,20 @@ from decimal import Decimal
 import sys, datetime, json
 from dolar_blue.utils import DecimalEncoder, arg
 
+
 def last_prices_each_day():
-  return DolarBlue.objects.raw('\
-  select db.*\
-  from dolar_blue_dolarblue db\
-  inner join\
+    return DolarBlue.objects.raw('\
+    select db.*\
+    from dolar_blue_dolarblue db\
+    inner join\
     (select source_id, max(date) as date, date(date) as datepart\
       from dolar_blue_dolarblue\
       group by source_id, date(date)\
     ) dbj\
-  on db.source_id = dbj.source_id and db.date = dbj.date\
-  order by db.date;\
-  ')
+    on db.source_id = dbj.source_id and db.date = dbj.date\
+    where db.date > now()::date - 730\
+    order by db.date;\
+    ')
 
 def api_mini_dolar(d):
     return {
