@@ -15,12 +15,6 @@ def api_dolar(d):
         'name': d.source.source,
         'long_name': d.source.description}
 
-def api_mini_dolar(d):
-  return {
-  'date': d.date.astimezone(arg).isoformat(),
-  'value': d.value_avg
-  }
-
 def all_prices():
   all_sources = Source.objects.all()
   allPrices = []
@@ -78,18 +72,6 @@ def addOficial(input, perc, newname):
         'long_name': newname
           }
 
-def last_prices_each_day():
-  return DolarBlue.objects.raw('\
-  select db.*\
-  from dolar_blue_dolarblue db\
-  inner join\
-    (select source_id, max(date) as date, date(date) as datepart\
-      from dolar_blue_dolarblue\
-      group by source_id, date(date)\
-    ) dbj\
-  on db.source_id = dbj.source_id and db.date = dbj.date\
-  order by db.date;\
-  ')
 
 def lastprice(request):
   allPrices = all_prices()
@@ -111,16 +93,3 @@ def all_currencies(request):
   max_currencies.sort(key=itemgetter('code'))
 
   return HttpResponse(json.dumps(max_currencies, cls=DecimalEncoder), mimetype="application/json")
-
-def graph_data(request):
-  output = {}
-
-  items = last_prices_each_day()
-  for src in Source.objects.all():
-    toadd = []
-    for item in items:
-      if item.source == src:
-        toadd.append(item)
-    output[src.description] = map(api_mini_dolar, toadd)
-
-  return HttpResponse(json.dumps(output, cls=DecimalEncoder), mimetype="application/json")
