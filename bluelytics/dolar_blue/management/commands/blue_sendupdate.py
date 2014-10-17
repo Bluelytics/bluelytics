@@ -20,8 +20,8 @@ def send_request_twitter(msg):
         'shorten': 'false',
         'top': 'true',
         'now': 'true',
-        'media[photo]': 'http://bluelytics.com.ar/social_img/twitter.png',
-        'media[thumbnail]': 'http://bluelytics.com.ar/social_img/twitter.png'
+        'media[photo]': 'http://api.bluelytics.com.ar/social_img/twitter.png',
+        'media[thumbnail]': 'http://api.bluelytics.com.ar/social_img/twitter.png'
     }
     r = requests.post("https://api.bufferapp.com/1/updates/create.json", data=payload)
     
@@ -36,8 +36,8 @@ def send_request_facebook(msg):
         'shorten': 'false',
         'top': 'true',
         'now': 'true',
-        'media[photo]': 'http://bluelytics.com.ar/social_img/facebook.png',
-        'media[thumbnail]': 'http://bluelytics.com.ar/social_img/facebook.png'
+        'media[photo]': 'http://api.bluelytics.com.ar/social_img/facebook.png',
+        'media[thumbnail]': 'http://api.bluelytics.com.ar/social_img/facebook.png'
     }
     r = requests.post("https://api.bufferapp.com/1/updates/create.json", data=payload)
     
