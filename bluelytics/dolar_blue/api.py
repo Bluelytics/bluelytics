@@ -22,7 +22,8 @@ def all_prices():
     today = DolarBlue.objects.filter(source__exact=src).order_by('-date').first()
     dateCalc = today.date.replace(hour=3, minute=0, second=0)
     yesterday = DolarBlue.objects.filter(source__exact=src, date__lt=dateCalc).order_by('-date').first()
-
+    if not yesterday:
+      yesterday = today
     allPrices.append({
       'date': today.date.astimezone(arg).isoformat(),
       'compra': today.value_buy,
