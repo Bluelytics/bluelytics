@@ -9,21 +9,34 @@ from dolar_blue.utils import DecimalEncoder, arg
 
 def last_prices_each_day():
     return DolarBlue.objects.raw('\
-    select db.*\
-    from dolar_blue_dolarblue db\
-    inner join\
-    (select source_id, max(date) as date, date(date) as datepart\
-      from dolar_blue_dolarblue\
-      group by source_id, date(date)\
-    ) dbj\
-    on db.source_id = dbj.source_id and db.date = dbj.date\
-    where db.date > now()::date - 730\
-    order by db.date;\
+    select\
+    0 as id, a.date, a.source_id, b.value_buy, b.value_sell from\
+    (\
+    select\
+      date(db.date), src.source as source_id\
+    from\
+      dolar_blue_dolarblue db\
+      inner join dolar_blue_source src\
+      on 1=1\
+      group by date(db.date), src.source\
+    ) a\
+    left join\
+    (\
+      select\
+      max(db.value_buy) as value_buy, max(db.value_sell) as value_sell, db.source_id, date(db.date) as date\
+      from\
+      dolar_blue_dolarblue db \
+      where db.date > now()::date - 730\
+      group by db.source_id, date(db.date)\
+      order by date(db.date)\
+    ) b\
+    on a.date = b.date and a.source_id = b.source_id\
+    ;\
     ')
 
 def api_mini_dolar(d):
     return {
-    'date': d.date.astimezone(arg).isoformat(),
+    'date': d.date.isoformat(),
     'value': d.value_avg
     }
 

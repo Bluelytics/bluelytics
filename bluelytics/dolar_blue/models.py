@@ -22,6 +22,8 @@ class DolarBlue(models.Model):
 
     def _get_value_avg(self):
        "Returns the average price"
+       if self.value_buy == None or self.value_sell == None:
+         return None
        return (self.value_buy + self.value_sell) / 2
     value_avg = property(_get_value_avg)
 
