@@ -6,3 +6,5 @@ local/
 casperjs/
 local_settings.py
 buffer_apikeys.py
+/bluelytics/data
+/bluelytics/static

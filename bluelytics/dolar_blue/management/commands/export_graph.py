@@ -20,7 +20,7 @@ def last_prices_each_day():
       on 1=1\
       group by date(db.date), src.source\
     ) a\
-    left join\
+    inner join\
     (\
       select\
       max(db.value_buy) as value_buy, max(db.value_sell) as value_sell, db.source_id, date(db.date) as date\
