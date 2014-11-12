@@ -18,6 +18,10 @@ class Command(BaseCommand):
             now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
             if len(args) == 4:
                 now = datetime.datetime.strptime('%s 13' % args[3], '%d-%m-%Y %H')
+
+            if Decimal(args[0]) < 1 or Decimal(args[1]) < 1:
+                self.stdout.write('Value too low')
+                return
             db = DolarBlue(date=now, value_buy = Decimal(args[0]), value_sell=Decimal(args[1]), source=source_inst)
 
             db.save()
