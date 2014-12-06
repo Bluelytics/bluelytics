@@ -12,6 +12,7 @@ from dolar_blue.calculations import maxSources, maxSourcesYesterday, convDolar
 @json_response
 def json_lastprice(request):
   max_sources = map(convDolar, maxSources())
+
   return max_sources
 
 
