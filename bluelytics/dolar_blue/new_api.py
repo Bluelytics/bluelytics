@@ -12,8 +12,8 @@ def latest(request):
     euro = Currency.objects.filter(code__exact='EUR')[0]
     eurovalue = CurrencyValue.objects.filter(curr__exact=euro.id).last()
     euro_avg = eurovalue.value
-    euro_buy = euro_avg * Decimal(0.95)
-    euro_sell = euro_avg * Decimal(1.05)
+    euro_buy = euro_avg * Decimal(1.03)
+    euro_sell = euro_avg * Decimal(0.97)
     last_date = None
 
     blue_buy = sum(map(lambda x: x['value_buy'], sources_blue))/len(sources_blue)
