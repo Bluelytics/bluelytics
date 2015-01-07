@@ -24,6 +24,6 @@ def latest(request):
     response['oficial'] = {'value_buy': source_oficial['value_buy'], 'value_avg': source_oficial['value_avg'], 'value_sell': source_oficial['value_sell']}
     response['blue'] = {'value_buy': blue_buy,  'value_avg': blue_avg, 'value_sell': blue_sell}
     response['last_update'] = max(map(lambda x:x['date'], max_sources))
-    response['oficial_euro'] = {'value_buy': euro_buy, 'value_avg': euro_avg, 'value_sell': euro_sell}
+    response['oficial_euro'] = {'value_buy': source_oficial['value_buy']/euro_buy, 'value_avg': source_oficial['value_avg']/euro_avg, 'value_sell': source_oficial['value_sell']/euro_sell}
     response['blue_euro'] = {'value_buy': blue_buy/euro_buy, 'value_avg': blue_avg/euro_avg, 'value_sell': blue_sell/euro_sell}
     return response
