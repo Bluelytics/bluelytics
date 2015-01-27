@@ -26,7 +26,6 @@ def last_prices_each_day():
       max(db.value_buy) as value_buy, max(db.value_sell) as value_sell, db.source_id, date(db.date) as date\
       from\
       dolar_blue_dolarblue db \
-      where db.date > now()::date - 730\
       group by db.source_id, date(db.date)\
       order by date(db.date)\
     ) b\
