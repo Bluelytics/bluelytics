@@ -2,10 +2,10 @@ from django.http import HttpResponse
 import json, datetime
 
 from operator import itemgetter
-from decimal import Decimal 
+from decimal import Decimal
 
 from dolar_blue.models import DolarBlue, Source
-from dolar_blue.utils import DecimalEncoder, arg
+from dolar_blue.utils import DecimalEncoder, arg, median
 from dolar_blue.calculations import maxCurrencies, convCurr
 
 def api_dolar(d):
@@ -43,18 +43,12 @@ def avgBlue(input):
   c_a = 0
   v_a = 0
   d = 0
-  for b in input:
-    if b['name'] != 'oficial':
-      i+=1
-      v+=b['venta']
-      c+=b['compra']
-      v_a+=b['venta_ayer']
-      c_a+=b['compra_ayer']
+  blue = filter(lambda x: x['name'] != 'oficial', input)
   return {'date': datetime.datetime.now().isoformat(),
-        'compra': c/i,
-        'venta': v/i,
-        'compra_ayer': c_a/i,
-        'venta_ayer': v_a/i,
+        'compra': median(map(lambda x: x['compra'], input)),
+        'venta': median(map(lambda x: x['venta'], input)),
+        'compra_ayer': median(map(lambda x: x['compra_ayer'], input)),
+        'venta_ayer': median(map(lambda x: x['venta_ayer'], input)),
         'name': 'blue',
         'long_name': 'Dolar Blue'
           }

@@ -3,6 +3,16 @@ import json, pytz,decimal
 
 arg = pytz.timezone("America/Argentina/Buenos_Aires")
 
+def median(lst):
+    lst = sorted(lst)
+    import math
+    if len(lst) < 1:
+            return None
+    if len(lst) %2 == 1:
+            return lst[((len(lst)+1)/2)-1]
+    if len(lst) %2 == 0:
+            return float(sum(lst[(len(lst)/2)-1:(len(lst)/2)+1]))/2.0
+
 class DecimalEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, decimal.Decimal):
