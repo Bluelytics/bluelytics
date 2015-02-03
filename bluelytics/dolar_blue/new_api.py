@@ -16,9 +16,9 @@ def latest(request):
     euro_sell = euro_avg * Decimal(0.97)
     last_date = None
 
-    blue_buy = median(map(lambda x: x['value_buy'], sources_blue))
-    blue_avg = median(map(lambda x: x['value_avg'], sources_blue))
-    blue_sell = median(map(lambda x: x['value_sell'], sources_blue))
+    blue_buy = Decimal(median(map(lambda x: x['value_buy'], sources_blue)))
+    blue_avg = Decimal(median(map(lambda x: x['value_avg'], sources_blue)))
+    blue_sell = Decimal(median(map(lambda x: x['value_sell'], sources_blue)))
 
     response = {}
     response['oficial'] = {'value_buy': source_oficial['value_buy'], 'value_avg': source_oficial['value_avg'], 'value_sell': source_oficial['value_sell']}
