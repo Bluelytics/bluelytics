@@ -4,6 +4,8 @@ from django.utils import timezone
 from dolar_blue.models import DolarBlue, Source
 from dolar_blue.calculations import maxSources, convDolar
 
+from dolar_blue.utils import median
+
 from decimal import Decimal
 import sys, subprocess, os, datetime
 import requests
@@ -12,7 +14,7 @@ import requests
 
 def send_request_twitter(msg):
     from buffer_apikeys import buffer_accesstoken
-    
+
     payload = {
         'access_token': buffer_accesstoken,
         'text': msg,
@@ -24,11 +26,11 @@ def send_request_twitter(msg):
         'media[thumbnail]': 'http://api.bluelytics.com.ar/social_img/twitter.png'
     }
     r = requests.post("https://api.bufferapp.com/1/updates/create.json", data=payload)
-    
+
 
 def send_request_facebook(msg):
     from buffer_apikeys import buffer_accesstoken
-    
+
     payload = {
         'access_token': buffer_accesstoken,
         'text': msg,
@@ -40,7 +42,7 @@ def send_request_facebook(msg):
         'media[thumbnail]': 'http://api.bluelytics.com.ar/social_img/facebook.png'
     }
     r = requests.post("https://api.bufferapp.com/1/updates/create.json", data=payload)
-    
+
 
 def convert_presentacion(values):
     return {
@@ -60,15 +62,15 @@ class Command(BaseCommand):
     args = 'social_network'
     help = 'Sends an update to each social network'
 
-    
+
 
     def prepare_data(self):
         last_data = map(convDolar, maxSources())
         only_blue = filter(lambda x: x['source'] != 'oficial', last_data)
         only_oficial = filter(lambda x: x['source'] == 'oficial', last_data)
         avg_blue = {
-            'value_buy': reduce(lambda x,y: x+y['value_buy'], only_blue, 0) / len(only_blue),
-            'value_sell': reduce(lambda x,y: x+y['value_sell'], only_blue, 0) / len(only_blue)
+            'value_buy': median(map(lambda x: x['value_buy'], only_blue)),
+            'value_sell': median(map(lambda x: x['value_sell'], only_blue))
         }
         avg_blue['value_avg'] = (avg_blue['value_buy'] + avg_blue['value_sell']) / 2
         oficial = only_oficial[0]
@@ -82,7 +84,7 @@ class Command(BaseCommand):
         self.avg_blue = avg_blue
 
 
-    def twitter_update(self):     
+    def twitter_update(self):
         send_request_twitter("Blue a %s, visita http://www.bluelytics.com.ar !" % self.dolar['blue']['sell'])
 
     def facebook_update(self):
@@ -90,7 +92,7 @@ class Command(BaseCommand):
 
     def generate_img(self):
         PATH_SCRIPT_IMG = '/home/sicarul/blueimg/'
-        
+
         subprocess.call([os.path.join(PATH_SCRIPT_IMG, 'gen_image.sh'),
             str(self.dolar['blue']['buy']),
             str(self.dolar['blue']['sell']),
@@ -105,7 +107,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if len(args) != 1:
             raise CommandError('Incorrect arguments')
-        
+
         try:
             self.prepare_data()
             self.generate_img()
@@ -114,7 +116,7 @@ class Command(BaseCommand):
                 self.twitter_update()
             if(social_network == 'facebook' or social_network == 'all'):
                 self.facebook_update()
-            
+
 
         except Exception:
             self.stdout.write('Error updating social network')
