@@ -54,3 +54,28 @@ class CurrencyValue(models.Model):
 
   def __unicode__(self):
     return self.curr.code + " " + self.date.strftime("%d/%m/%Y %H:%M:%S")
+
+class BCRA(models.Model):
+  date = models.DateField(unique=True)
+  Reservas = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  Asistencia = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  BaseMonetaria = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  Circulacion = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  BilletesPublico = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  EfectivoFinanciero = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  DepositosBCRA = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  LEBAC = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  DepositosFinancieras = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  CuentasCorrientes = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  CajasAhorro = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  APlazo = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  OtrosDepositos = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  PrestamosAPrivados = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  TasasInteresEntrePrivadas = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  TasasInteres30Dias = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  BADLAR = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  CambioRef = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+  CER = models.DecimalField(decimal_places=3, max_digits=20, null=True)
+
+  def __unicode__(self):
+    return self.date.strftime("%d/%m/%Y")

@@ -6,7 +6,7 @@ from decimal import Decimal
 import sys, datetime
 
 class Command(BaseCommand):
-    args = 'valor_compra valor_venta'
+    args = 'valor_compra valor_venta source'
     help = 'Adds the specified dollar value to the database'
 
     def handle(self, *args, **options):
