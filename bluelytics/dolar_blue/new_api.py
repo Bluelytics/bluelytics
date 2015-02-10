@@ -1,4 +1,4 @@
-from dolar_blue.utils import json_response, median
+from dolar_blue.utils import json_response, median, buy_multiplier
 from dolar_blue.calculations import maxSources, convDolar
 from dolar_blue.models import Currency, CurrencyValue
 from decimal import *
@@ -16,9 +16,9 @@ def latest(request):
     euro_sell = euro_avg * Decimal(0.97)
     last_date = None
 
-    blue_buy = Decimal(median(map(lambda x: x['value_buy'], sources_blue)))
-    blue_avg = Decimal(median(map(lambda x: x['value_avg'], sources_blue)))
     blue_sell = Decimal(median(map(lambda x: x['value_sell'], sources_blue)))
+    blue_buy = blue_sell * Decimal(buy_multiplier)
+    blue_avg = (blue_sell + blue_buy) / 2
 
     response = {}
     response['oficial'] = {'value_buy': source_oficial['value_buy'], 'value_avg': source_oficial['value_avg'], 'value_sell': source_oficial['value_sell']}

@@ -5,7 +5,7 @@ from operator import itemgetter
 from decimal import Decimal
 
 from dolar_blue.models import DolarBlue, Source
-from dolar_blue.utils import DecimalEncoder, arg, median
+from dolar_blue.utils import DecimalEncoder, arg, median, buy_multiplier
 from dolar_blue.calculations import maxCurrencies, convCurr
 
 def api_dolar(d):
@@ -45,9 +45,9 @@ def avgBlue(input):
   d = 0
   blue = filter(lambda x: x['name'] != 'oficial', input)
   return {'date': datetime.datetime.now().isoformat(),
-        'compra': median(map(lambda x: x['compra'], blue)),
+        'compra': median(map(lambda x: x['venta'], blue))*Decimal(buy_multiplier),
         'venta': median(map(lambda x: x['venta'], blue)),
-        'compra_ayer': median(map(lambda x: x['compra_ayer'], blue)),
+        'compra_ayer': median(map(lambda x: x['venta_ayer'], blue))*Decimal(buy_multiplier),
         'venta_ayer': median(map(lambda x: x['venta_ayer'], blue)),
         'name': 'blue',
         'long_name': 'Dolar Blue'
