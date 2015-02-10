@@ -28,7 +28,8 @@ def api_bcra(d):
     'TasasInteres30Dias': d.TasasInteres30Dias,
     'BADLAR': d.BADLAR,
     'CambioRef': d.CambioRef,
-    'CER': d.CER
+    'CER': d.CER,
+    'DolarImplicito': d.BaseMonetaria / d.Reservas
     }
 
 class Command(BaseCommand):
