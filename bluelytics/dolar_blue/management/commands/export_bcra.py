@@ -43,7 +43,7 @@ class Command(BaseCommand):
         print args
         try:
 
-            items = BCRA.objects.all()
+            items = BCRA.objects.order_by('date')
             output = map(api_bcra, items)
 
             with open(args[0], 'w') as j:
