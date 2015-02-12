@@ -36,7 +36,7 @@ def last_prices_each_day():
 def api_mini_dolar(d):
     return {
     'date': d.date.isoformat(),
-    'value': d.value_avg
+    'value': d.value_sell
     }
 
 class Command(BaseCommand):
