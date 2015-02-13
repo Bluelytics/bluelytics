@@ -3,7 +3,7 @@ import json, pytz,decimal
 
 arg = pytz.timezone("America/Argentina/Buenos_Aires")
 
-buy_multiplier = 0.93
+buy_multiplier = 0.965
 
 def median(lst):
     lst = sorted(lst)
