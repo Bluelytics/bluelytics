@@ -45,9 +45,9 @@ def avgBlue(input):
   d = 0
   blue = filter(lambda x: x['name'] != 'oficial', input)
   return {'date': datetime.datetime.now().isoformat(),
-        'compra': median(map(lambda x: x['venta'], blue))*buy_multiplier,
+        'compra': median(map(lambda x: x['venta'], blue)) * Decimal(buy_multiplier),
         'venta': median(map(lambda x: x['venta'], blue)),
-        'compra_ayer': median(map(lambda x: x['venta_ayer'], blue))*buy_multiplier,
+        'compra_ayer': median(map(lambda x: x['venta_ayer'], blue))*Decimal(buy_multiplier),
         'venta_ayer': median(map(lambda x: x['venta_ayer'], blue)),
         'name': 'blue',
         'long_name': 'Dolar Blue'
